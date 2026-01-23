@@ -1,0 +1,147 @@
+import React from 'react';
+import { VALENTINE_DAYS } from '../data/catalog';
+
+const WHATSAPP_NUMBER = '+91 7589450517';
+
+export default function OrderSummary({
+  answers,
+  selectedItems,
+  selectedItemsByDay,
+  totalPrice,
+  deliveryCharge,
+  formData,
+  onEdit,
+}) {
+  const finalTotal = totalPrice + deliveryCharge;
+
+  const generateWhatsAppMessage = () => {
+    const selectedLines = VALENTINE_DAYS.map((day) => {
+      const items = selectedItemsByDay[day.id] || [];
+      if (!items.length) return null;
+      const joined = items.map((item) => `${item.name} - ₹${item.price}`).join(' + ');
+      return `${day.name}: ${joined}`;
+    }).filter(Boolean);
+
+    const itemsList = selectedLines.length
+      ? selectedLines.join('\n')
+      : 'No items selected';
+
+    const giftMessage = formData.giftMessage
+      ? `\n\nGift Message: "${formData.giftMessage}"`
+      : '';
+
+    const totalLine = deliveryCharge > 0
+      ? `Total: ₹${totalPrice} + Delivery (₹${deliveryCharge})`
+      : `Total: ₹${totalPrice} (Delivery Free in Bathinda)`;
+
+    const message = `Hello, I want to order a Valentine Hamper from Taim Studios.
+
+For: ${answers.gender}
+Age: ${answers.age}
+Vibe: ${answers.vibe}
+
+Selected Items:
+${itemsList}
+
+Name: ${formData.name}
+Phone: ${formData.phone}
+City: ${formData.city}
+Address: ${formData.address}
+Pincode: ${formData.pincode}
+
+${totalLine}${giftMessage}
+
+Please confirm.`;
+
+    return encodeURIComponent(message);
+  };
+
+  const whatsAppUrl = `https://wa.me/${WHATSAPP_NUMBER.replace(/\s+/g, '')}?text=${generateWhatsAppMessage()}`;
+
+  return (
+    <div className="screen order-summary-screen">
+      <div className="summary-container">
+        <h1>Order Summary</h1>
+
+        {/* Customer Details */}
+        <div className="summary-section">
+          <h3>Delivery To</h3>
+          <div className="summary-box">
+            <p>
+              <strong>{formData.name}</strong>
+            </p>
+            <p>{formData.address}</p>
+            <p>
+              {formData.city} - {formData.pincode}
+            </p>
+            <p>📱 {formData.phone}</p>
+          </div>
+        </div>
+
+        {/* Preferences */}
+        <div className="summary-section">
+          <h3>Your Preferences</h3>
+          <div className="summary-box">
+            <p>For: <strong>{answers.gender}</strong></p>
+            <p>Age: <strong>{answers.age}</strong></p>
+            <p>Vibe: <strong>{answers.vibe}</strong></p>
+          </div>
+        </div>
+
+        {/* Items */}
+        <div className="summary-section">
+          <h3>Selected Items ({selectedItems.length})</h3>
+          <div className="summary-box items-box">
+            {selectedItems.map((item) => (
+              <div key={item.id} className="summary-item">
+                <span>{item.name}</span>
+                <span className="price">₹{item.price}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Gift Message */}
+        {formData.giftMessage && (
+          <div className="summary-section">
+            <h3>Gift Message</h3>
+            <div className="summary-box">
+              <p className="gift-message">"{formData.giftMessage}"</p>
+            </div>
+          </div>
+        )}
+
+        {/* Price Summary */}
+        <div className="summary-section">
+          <h3>Total Amount</h3>
+          <div className="summary-box price-box">
+            <div className="price-detail">
+              <span>Items Total:</span>
+              <span>₹{totalPrice}</span>
+            </div>
+            {deliveryCharge > 0 && (
+              <div className="price-detail">
+                <span>Delivery Charge:</span>
+                <span>₹{deliveryCharge}</span>
+              </div>
+            )}
+            <div className="price-detail total">
+              <span>Final Total:</span>
+              <span className="final-total">₹{finalTotal}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="summary-actions">
+          <button className="btn btn-secondary" onClick={onEdit}>
+            Edit Details
+          </button>
+          <a href={whatsAppUrl} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
+            Place Order on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
