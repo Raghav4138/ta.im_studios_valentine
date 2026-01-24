@@ -39,7 +39,7 @@ body {
    LANDING SCREEN
    ======================== */
 .landing-screen {
-  background: linear-gradient(135deg, #d4af8c 0%, #c9a574 100%);
+  background: #fed59e;
   justify-content: center;
   align-items: center;
   padding: 2rem;
@@ -49,26 +49,31 @@ body {
   text-align: center;
   max-width: 500px;
 }
+.landing-logo {
+  width: 160px;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
 
 .landing-content h1 {
-  font-size: 3.5rem;
-  margin-bottom: 0.5rem;
-  color: #fff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 3rem;
+  margin-bottom: 0.25rem;
+  color: #2c2c2c;
 }
 
 .landing-content h2 {
-  font-size: 2rem;
-  color: #fff;
-  margin-bottom: 1rem;
-  font-weight: 300;
+  font-size: 1.8rem;
+  color: #4a3b2a;
+  margin-bottom: 0.75rem;
+  font-weight: 400;
   letter-spacing: 1px;
 }
 
 .landing-content p {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 2rem;
+  font-size: 1.05rem;
+  color: #4a3b2a;
+  margin-bottom: 1.75rem;
   line-height: 1.6;
 }
 
@@ -487,6 +492,8 @@ body {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+  align-items: stretch;
+  flex-wrap: wrap;
 }
 
 .coupon-input {
@@ -496,6 +503,7 @@ body {
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
+  min-width: 0;
 }
 
 .coupon-input:disabled {
@@ -504,7 +512,7 @@ body {
 }
 
 .btn-apply {
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   background: linear-gradient(135deg, #d4af8c 0%, #c9a574 100%);
   color: #fff;
   border: none;
@@ -512,6 +520,8 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .btn-apply:hover:not(:disabled) {
