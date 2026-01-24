@@ -11,12 +11,29 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
   });
 
   const [errors, setErrors] = useState({});
+  const [couponCode, setCouponCode] = useState('');
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
+  const [couponMessage, setCouponMessage] = useState('');
+  const [discountAmount, setDiscountAmount] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleApplyCoupon = () => {
+    if (couponCode.trim().toUpperCase() === 'LOVE14') {
+      const discount = Math.round(totalPrice * 0.14);
+      setDiscountAmount(discount);
+      setIsCouponApplied(true);
+      setCouponMessage('Coupon applied successfully');
+    } else {
+      setDiscountAmount(0);
+      setIsCouponApplied(false);
+      setCouponMessage('Invalid coupon code');
     }
   };
 
@@ -36,11 +53,16 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit(formData);
+      onSubmit({
+        ...formData,
+        couponCode: isCouponApplied ? 'LOVE14' : '',
+        discountAmount: discountAmount,
+      });
     }
   };
 
-  const finalTotal = totalPrice + deliveryCharge;
+  const subtotal = totalPrice;
+  const finalTotal = subtotal - discountAmount + deliveryCharge;
 
   return (
     <div className="screen checkout-screen">
@@ -50,9 +72,15 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
         {/* Price Summary */}
         <div className="price-summary">
           <div className="summary-row">
-            <span>Items Total:</span>
-            <span>₹{totalPrice}</span>
+            <span>Subtotal:</span>
+            <span>₹{subtotal}</span>
           </div>
+          {isCouponApplied && (
+            <div className="summary-row discount">
+              <span>Discount (14%):</span>
+              <span>-₹{discountAmount}</span>
+            </div>
+          )}
           {deliveryCharge > 0 && (
             <div className="summary-row">
               <span>Delivery Charge:</span>
@@ -63,6 +91,34 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
             <span>Total Amount:</span>
             <span>₹{finalTotal}</span>
           </div>
+        </div>
+
+        {/* Coupon Code Section */}
+        <div className="coupon-section">
+          <h3>Have a Coupon Code?</h3>
+          <div className="coupon-input-group">
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+              placeholder="Enter coupon code"
+              className="coupon-input"
+              disabled={isCouponApplied}
+            />
+            <button
+              type="button"
+              onClick={handleApplyCoupon}
+              className="btn btn-apply"
+              disabled={isCouponApplied}
+            >
+              Apply
+            </button>
+          </div>
+          {couponMessage && (
+            <p className={`coupon-message ${isCouponApplied ? 'success' : 'error'}`}>
+              {couponMessage}
+            </p>
+          )}
         </div>
 
         {/* Form */}

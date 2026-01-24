@@ -91,7 +91,7 @@ function App() {
     }));
   };
 
-  const handleSkipDay = () => {
+  const handleNextDay = () => {
     if (currentDayIndex < VALENTINE_DAYS.length - 1) {
       setCurrentDayIndex((prev) => prev + 1);
     } else {
@@ -99,12 +99,21 @@ function App() {
     }
   };
 
-  const handleNextDay = () => {
-    if (currentDayIndex < VALENTINE_DAYS.length - 1) {
-      setCurrentDayIndex((prev) => prev + 1);
+  const handleBackDay = () => {
+    if (currentDayIndex > 0) {
+      setCurrentDayIndex((prev) => prev - 1);
     } else {
-      setStep(STEPS.CHECKOUT);
+      setStep(STEPS.VIBE);
     }
+  };
+
+  const handleBackFromCheckout = () => {
+    setCurrentDayIndex(VALENTINE_DAYS.length - 1);
+    setStep(STEPS.DAY_BUILDER);
+  };
+
+  const handleBackFromOrderSummary = () => {
+    setStep(STEPS.CHECKOUT);
   };
 
   const handleCheckoutSubmit = (formData) => {
@@ -135,6 +144,7 @@ function App() {
         question="Who is this for?"
         options={genderOptions}
         onSelect={handleGenderSelect}
+        onBack={() => setStep(STEPS.LANDING)}
       />
     );
   }
@@ -145,6 +155,7 @@ function App() {
         question="What's their age group?"
         options={ageOptions}
         onSelect={handleAgeSelect}
+        onBack={() => setStep(STEPS.GENDER)}
       />
     );
   }
@@ -155,6 +166,7 @@ function App() {
         question="What's the vibe?"
         options={vibeOptions}
         onSelect={handleVibeSelect}
+        onBack={() => setStep(STEPS.AGE)}
       />
     );
   }
@@ -171,7 +183,7 @@ function App() {
         onRemoveItem={handleRemoveItem}
         totalPrice={totalPrice}
         onNext={handleNextDay}
-        onSkip={handleSkipDay}
+        onBack={handleBackDay}
         isLastDay={isLastDay}
       />
     );
@@ -183,7 +195,7 @@ function App() {
         totalPrice={totalPrice}
         deliveryCharge={deliveryCharge}
         onSubmit={handleCheckoutSubmit}
-        onBack={() => setStep(STEPS.DAY_BUILDER)}
+        onBack={handleBackFromCheckout}
       />
     );
   }
@@ -198,6 +210,7 @@ function App() {
         deliveryCharge={deliveryCharge}
         formData={checkoutData}
         onEdit={handleEditCheckout}
+        onBack={handleBackFromOrderSummary}
       />
     );
   }

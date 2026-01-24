@@ -1,9 +1,14 @@
 import React from 'react';
 
-export default function QuestionScreen({ question, options, onSelect, onSkip }) {
+export default function QuestionScreen({ question, options, onSelect, onBack }) {
   return (
     <div className="screen question-screen">
       <div className="question-content">
+        {onBack && (
+          <button className="back-button" onClick={onBack}>
+            ← Back
+          </button>
+        )}
         <h2>{question}</h2>
         <div className="options-grid">
           {options.map((option) => (
@@ -17,11 +22,6 @@ export default function QuestionScreen({ question, options, onSelect, onSkip }) 
             </button>
           ))}
         </div>
-        {onSkip && (
-          <button className="btn btn-secondary" onClick={onSkip}>
-            Skip
-          </button>
-        )}
       </div>
     </div>
   );

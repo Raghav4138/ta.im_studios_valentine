@@ -1,7 +1,7 @@
 import React from 'react';
 import { VALENTINE_DAYS } from '../data/catalog';
 
-const WHATSAPP_NUMBER = '+91 7589450517';
+const WHATSAPP_NUMBER = '+91 9569941138';
 
 export default function OrderSummary({
   answers,
@@ -11,8 +11,10 @@ export default function OrderSummary({
   deliveryCharge,
   formData,
   onEdit,
+  onBack,
 }) {
-  const finalTotal = totalPrice + deliveryCharge;
+  const discountAmount = formData.discountAmount || 0;
+  const finalTotal = totalPrice - discountAmount + deliveryCharge;
 
   const generateWhatsAppMessage = () => {
     const selectedLines = VALENTINE_DAYS.map((day) => {
@@ -30,9 +32,11 @@ export default function OrderSummary({
       ? `\n\nGift Message: "${formData.giftMessage}"`
       : '';
 
-    const totalLine = deliveryCharge > 0
-      ? `Total: ₹${totalPrice} + Delivery (₹${deliveryCharge})`
-      : `Total: ₹${totalPrice} (Delivery Free in Bathinda)`;
+    const couponInfo = formData.couponCode
+      ? `\nCoupon Applied: ${formData.couponCode}\nDiscount: ₹${discountAmount}`
+      : '';
+
+    const totalLine = `Subtotal: ₹${totalPrice}${couponInfo}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
 
     const message = `Hello, I want to order a Valentine Hamper from Taim Studios.
 
@@ -49,7 +53,8 @@ City: ${formData.city}
 Address: ${formData.address}
 Pincode: ${formData.pincode}
 
-${totalLine}${giftMessage}
+${totalLine}
+Total Payable: ₹${finalTotal}${giftMessage}
 
 Please confirm.`;
 
@@ -61,7 +66,12 @@ Please confirm.`;
   return (
     <div className="screen order-summary-screen">
       <div className="summary-container">
-        <h1>Order Summary</h1>
+        <div className="summary-header">
+          <button className="back-button" onClick={onBack}>
+            ← Back
+          </button>
+          <h1>Order Summary</h1>
+        </div>
 
         {/* Customer Details */}
         <div className="summary-section">
@@ -116,9 +126,15 @@ Please confirm.`;
           <h3>Total Amount</h3>
           <div className="summary-box price-box">
             <div className="price-detail">
-              <span>Items Total:</span>
+              <span>Subtotal:</span>
               <span>₹{totalPrice}</span>
             </div>
+            {discountAmount > 0 && (
+              <div className="price-detail discount">
+                <span>Discount (LOVE14):</span>
+                <span>-₹{discountAmount}</span>
+              </div>
+            )}
             {deliveryCharge > 0 && (
               <div className="price-detail">
                 <span>Delivery Charge:</span>
