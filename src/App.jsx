@@ -56,7 +56,9 @@ function App() {
 
   const handleAgeSelect = (value) => {
     setAnswers((prev) => ({ ...prev, age: value }));
-    setStep(STEPS.VIBE);
+    setCurrentDayIndex(0);
+    setStep(STEPS.DAY_BUILDER)
+    // setStep(STEPS.VIBE);
   };
 
   const handleVibeSelect = (value) => {
@@ -103,7 +105,7 @@ function App() {
     if (currentDayIndex > 0) {
       setCurrentDayIndex((prev) => prev - 1);
     } else {
-      setStep(STEPS.VIBE);
+      setStep(STEPS.AGE);
     }
   };
 
@@ -160,16 +162,16 @@ function App() {
     );
   }
 
-  if (step === STEPS.VIBE) {
-    return (
-      <QuestionScreen
-        question="What's the vibe?"
-        options={vibeOptions}
-        onSelect={handleVibeSelect}
-        onBack={() => setStep(STEPS.AGE)}
-      />
-    );
-  }
+  // if (step === STEPS.VIBE) {
+  //   return (
+  //     <QuestionScreen
+  //       question="What's the vibe?"
+  //       options={vibeOptions}
+  //       onSelect={handleVibeSelect}
+  //       onBack={() => setStep(STEPS.AGE)}
+  //     />
+  //   );
+  // }
 
   if (step === STEPS.DAY_BUILDER) {
     const currentDay = VALENTINE_DAYS[currentDayIndex];
