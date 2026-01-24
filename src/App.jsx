@@ -31,14 +31,14 @@ function App() {
 
   // Question data
   const genderOptions = [
-    { label: 'Girlfriend', value: 'Girlfriend', emoji: '👩' },
-    { label: 'Boyfriend', value: 'Boyfriend', emoji: '👨' },
+    { label: 'Queen', value: 'Queen', image: '/queen-crown.png' },
+    { label: 'King', value: 'King', image: '/king-crown.png' },
   ];
 
   const ageOptions = [
-    { label: '16 - 20', value: '16 - 20', emoji: '🎓' },
-    { label: '21 - 25', value: '21 - 25', emoji: '💼' },
-    { label: '25+', value: '25+', emoji: '⭐' },
+    { label: '16y - 20y', value: '16 - 20', image: '/age-teen.png', subtext: 'Young Love' },
+    { label: '21y - 25y', value: '21 - 25', image: '/age-young.png', subtext: 'Modern Romance' },
+    { label: '25y+', value: '25+', image: '/age-adult.png', subtext: 'Timeless Love' },
   ];
 
   const vibeOptions = [
@@ -144,6 +144,7 @@ function App() {
     return (
       <QuestionScreen
         question="Who is this for?"
+        subtitle="Select the best for your loved one"
         options={genderOptions}
         onSelect={handleGenderSelect}
         onBack={() => setStep(STEPS.LANDING)}
@@ -154,7 +155,8 @@ function App() {
   if (step === STEPS.AGE) {
     return (
       <QuestionScreen
-        question="What's their age group?"
+        question="Select their Age"
+        subtitle="although age is just a number"
         options={ageOptions}
         onSelect={handleAgeSelect}
         onBack={() => setStep(STEPS.GENDER)}

@@ -65,13 +65,17 @@ Please confirm.`;
 
   return (
     <div className="screen order-summary-screen">
-      <div className="summary-container">
-        <div className="summary-header">
-          <button className="back-button" onClick={onBack}>
-            ← Back
-          </button>
-          <h1>Order Summary</h1>
+      <div className="day-header-box">
+        <img src="/logo.png" alt="Taim Studios" className="day-logo" />
+        <h1 className="day-title">Order Summary</h1>
+        <div className="day-divider">
+          <span className="line"></span>
+          <span className="diamond"></span>
+          <span className="line"></span>
         </div>
+        <div className="day-subtitle">Review your order details</div>
+      </div>
+      <div className="summary-container">
 
         {/* Customer Details */}
         <div className="summary-section">
@@ -150,12 +154,12 @@ Please confirm.`;
 
         {/* Action Buttons */}
         <div className="summary-actions">
-          <button className="btn btn-secondary" onClick={onEdit}>
-            Edit Details
-          </button>
           <a href={whatsAppUrl} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp">
             Place Order on WhatsApp
           </a>
+          <button className="btn btn-secondary" onClick={onEdit}>
+            Back
+          </button>
         </div>
       </div>
     </div>

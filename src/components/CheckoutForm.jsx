@@ -66,8 +66,17 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
 
   return (
     <div className="screen checkout-screen">
+      <div className="day-header-box">
+        <img src="/logo.png" alt="Taim Studios" className="day-logo" />
+        <h1 className="day-title">Delivery Details</h1>
+        <div className="day-divider">
+          <span className="line"></span>
+          <span className="diamond"></span>
+          <span className="line"></span>
+        </div>
+        <div className="day-subtitle">Please provide your delivery details</div>
+      </div>
       <div className="checkout-container">
-        <h1>Delivery Details</h1>
 
         {/* Price Summary */}
         <div className="price-summary">
@@ -201,15 +210,15 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
           </div>
 
           <div className="form-actions">
+            <button type="submit" className="btn btn-primary">
+              Continue to Order Summary
+            </button>
             <button
               type="button"
               className="btn btn-secondary"
               onClick={onBack}
             >
               Back
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Continue to Order Summary
             </button>
           </div>
         </form>

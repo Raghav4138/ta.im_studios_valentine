@@ -47,12 +47,15 @@ export default function DayBuilder({
   return (
     <div className="screen day-builder-screen">
       {/* Header */}
-      <div className="day-header">
-        <button className="back-button" onClick={onBack}>
-          ← Back
-        </button>
-        <h1>{day.name}</h1>
-        <p className="day-date">{day.date}</p>
+      <div className="day-header-box">
+        <img src="/logo.png" alt="Logo" className="day-logo" />
+        <h1 className="day-title">{day.name}</h1>
+        <div className="day-divider">
+          <span className="diamond" />
+          <span className="line" />
+          <span className="diamond" />
+        </div>
+        <p className="day-subtitle">Say it With {day.name.split(' ')[0]}s</p>
       </div>
 
       {/* Main Content */}
@@ -142,18 +145,19 @@ export default function DayBuilder({
         )}
       </div>
 
-      {/* Sticky Footer */}
-      <div className="sticky-footer">
-        <div className="footer-content">
-          <div className="total-section">
-            <span>Total Price:</span>
-            <span className="total-amount">₹{totalPrice}</span>
-          </div>
-          <div className="action-buttons">
-            <button className="btn btn-primary" onClick={onNext}>
-              {isLastDay ? 'Proceed to Checkout' : 'Next Day'}
-            </button>
-          </div>
+      {/* Footer */}
+      <div className="day-footer">
+        <div className="day-total-box">
+          <span className="total-label">Total Price:</span>
+          <span className="total-value">₹{totalPrice}</span>
+        </div>
+        <div className="day-nav-buttons">
+          <button className="day-back-btn" onClick={onBack}>
+            &lt; Back
+          </button>
+          <button className="day-next-btn" onClick={onNext}>
+            Next &gt;
+          </button>
         </div>
       </div>
     </div>
