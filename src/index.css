@@ -5,7 +5,7 @@
 
   color-scheme: light;
   color: #2c2c2c;
-  background-color: #f5e6d3;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,7 +28,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+  background: #ffffff;
 }
 
 h1, h2, h3, h4, h5, h6 {

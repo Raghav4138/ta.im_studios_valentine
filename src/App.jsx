@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import './App.css';
-import { VALENTINE_DAYS, DELIVERY_CHARGE } from './data/catalog';
+import { VALENTINE_DAYS, DELIVERY_CHARGE, BOUQUETS } from './data/catalog';
 import LandingScreen from './components/LandingScreen';
 import QuestionScreen from './components/QuestionScreen';
 import DayBuilder from './components/DayBuilder';
 import CheckoutForm from './components/CheckoutForm';
 import OrderSummary from './components/OrderSummary';
+import Navbar from './components/Navbar';
 
 const STEPS = {
   LANDING: 'landing',
@@ -13,6 +14,7 @@ const STEPS = {
   AGE: 'age',
   VIBE: 'vibe',
   DAY_BUILDER: 'day_builder',
+  BOUQUETS: 'bouquets',
   CHECKOUT: 'checkout',
   ORDER_SUMMARY: 'order_summary',
 };
@@ -27,12 +29,23 @@ function App() {
     }, {})
   );
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
+  const [bouquetSelection, setBouquetSelection] = useState([]);
+  const [orderFlow, setOrderFlow] = useState('hamper');
   const [checkoutData, setCheckoutData] = useState(null);
+  const [freebieItem, setFreebieItem] = useState(null);
+
+  const handleFreebieAdd = (freebie) => {
+    setFreebieItem(freebie);
+  };
+
+  const handleFreebieRemove = () => {
+    setFreebieItem(null);
+  };
 
   // Question data
   const genderOptions = [
-    { label: 'Queen', value: 'Queen', image: '/queen-crown.png' },
-    { label: 'King', value: 'King', image: '/king-crown.png' },
+    { label: 'Her', value: 'Her', image: '/queen-crown.png' },
+    { label: 'Him', value: 'Him', image: '/king-crown.png' },
   ];
 
   const ageOptions = [
@@ -68,7 +81,13 @@ function App() {
   };
 
   const handleStartBuilder = () => {
+    setOrderFlow('hamper');
     setStep(STEPS.GENDER);
+  };
+
+  const handleStartBouquets = () => {
+    setOrderFlow('bouquets');
+    setStep(STEPS.BOUQUETS);
   };
 
   const handleSelectProduct = (product) => {
@@ -77,12 +96,45 @@ function App() {
       (item) => item.id === product.id
     );
     if (!isAlreadySelected) {
-      const productWithDay = { ...product, dayId, dayName };
+      const productWithDay = { ...product, dayId, dayName, qty: 1 };
       setSelectedItemsByDay((prev) => ({
         ...prev,
         [dayId]: [...prev[dayId], productWithDay],
       }));
     }
+  };
+
+  const handleUpdateProduct = (product, updates) => {
+    const { id: dayId, name: dayName } = VALENTINE_DAYS[currentDayIndex];
+    setSelectedItemsByDay((prev) => {
+      const existing = prev[dayId] || [];
+      const index = existing.findIndex((item) => item.id === product.id);
+      const nextItem = {
+        ...product,
+        dayId,
+        dayName,
+        isChocolateVariant: dayId === 'chocolate-day',
+        ...updates,
+      };
+
+      if (!nextItem.qty || nextItem.qty <= 0) {
+        return {
+          ...prev,
+          [dayId]: existing.filter((item) => item.id !== product.id),
+        };
+      }
+
+      if (index === -1) {
+        return {
+          ...prev,
+          [dayId]: [...existing, nextItem],
+        };
+      }
+
+      const updated = [...existing];
+      updated[index] = { ...existing[index], ...nextItem };
+      return { ...prev, [dayId]: updated };
+    });
   };
 
   const handleRemoveItem = (productId) => {
@@ -109,7 +161,22 @@ function App() {
     }
   };
 
+  const handleBouquetSelect = (product) => {
+    const isAlreadySelected = bouquetSelection.some((item) => item.id === product.id);
+    if (!isAlreadySelected) {
+      setBouquetSelection([product]);
+    }
+  };
+
+  const handleBouquetRemove = (productId) => {
+    setBouquetSelection((prev) => prev.filter((item) => item.id !== productId));
+  };
+
   const handleBackFromCheckout = () => {
+    if (orderFlow === 'bouquets') {
+      setStep(STEPS.BOUQUETS);
+      return;
+    }
     setCurrentDayIndex(VALENTINE_DAYS.length - 1);
     setStep(STEPS.DAY_BUILDER);
   };
@@ -128,20 +195,30 @@ function App() {
   };
 
   // Calculate totals
-  const allSelectedItems = Object.values(selectedItemsByDay).flat();
-  const totalPrice = allSelectedItems.reduce((sum, item) => sum + item.price, 0);
+  const allSelectedItems =
+    orderFlow === 'bouquets'
+      ? bouquetSelection
+      : Object.values(selectedItemsByDay).flat();
+  const totalPrice = allSelectedItems.reduce(
+    (sum, item) => sum + item.price * (item.qty || 1),
+    0
+  );
   const deliveryCharge =
     checkoutData && checkoutData.city.toLowerCase() !== 'bathinda'
       ? DELIVERY_CHARGE
       : 0;
 
-  // Render steps
+  // Build content for current step
+  let content = null;
   if (step === STEPS.LANDING) {
-    return <LandingScreen onStart={handleStartBuilder} />;
-  }
-
-  if (step === STEPS.GENDER) {
-    return (
+    content = (
+      <LandingScreen
+        onStartHamper={handleStartBuilder}
+        onStartBouquets={handleStartBouquets}
+      />
+    );
+  } else if (step === STEPS.GENDER) {
+    content = (
       <QuestionScreen
         question="Who is this for?"
         subtitle="Select the best for your loved one"
@@ -150,10 +227,8 @@ function App() {
         onBack={() => setStep(STEPS.LANDING)}
       />
     );
-  }
-
-  if (step === STEPS.AGE) {
-    return (
+  } else if (step === STEPS.AGE) {
+    content = (
       <QuestionScreen
         question="Select their Age"
         subtitle="although age is just a number"
@@ -179,12 +254,13 @@ function App() {
     const currentDay = VALENTINE_DAYS[currentDayIndex];
     const isLastDay = currentDayIndex === VALENTINE_DAYS.length - 1;
 
-    return (
+    content = (
       <DayBuilder
         day={currentDay}
         selectedItems={selectedItemsByDay[currentDay.id]}
         onSelectProduct={handleSelectProduct}
         onRemoveItem={handleRemoveItem}
+        onUpdateProduct={handleUpdateProduct}
         totalPrice={totalPrice}
         onNext={handleNextDay}
         onBack={handleBackDay}
@@ -193,33 +269,77 @@ function App() {
     );
   }
 
+  if (step === STEPS.BOUQUETS) {
+    const bouquetDay = {
+      id: 'bouquets',
+      name: 'Bouquets',
+      options: BOUQUETS,
+    };
+
+    content = (
+      <DayBuilder
+        day={bouquetDay}
+        selectedItems={bouquetSelection}
+        onSelectProduct={handleBouquetSelect}
+        onRemoveItem={handleBouquetRemove}
+        totalPrice={totalPrice}
+        onNext={() => setStep(STEPS.CHECKOUT)}
+        onBack={() => setStep(STEPS.LANDING)}
+        isLastDay={true}
+      />
+    );
+  }
+
   if (step === STEPS.CHECKOUT) {
-    return (
+    content = (
       <CheckoutForm
         totalPrice={totalPrice}
         deliveryCharge={deliveryCharge}
         onSubmit={handleCheckoutSubmit}
         onBack={handleBackFromCheckout}
+        onFreebieAdd={handleFreebieAdd}
+        onFreebieRemove={handleFreebieRemove}
+        orderType={orderFlow}
       />
     );
   }
 
   if (step === STEPS.ORDER_SUMMARY) {
-    return (
+    const orderDays =
+      orderFlow === 'bouquets'
+        ? [{ id: 'bouquets', name: 'Bouquets' }]
+        : VALENTINE_DAYS;
+    const orderItemsByDay =
+      orderFlow === 'bouquets'
+        ? { bouquets: bouquetSelection }
+        : selectedItemsByDay;
+
+    content = (
       <OrderSummary
         answers={answers}
         selectedItems={allSelectedItems}
-        selectedItemsByDay={selectedItemsByDay}
+        selectedItemsByDay={orderItemsByDay}
+        orderDays={orderDays}
+        orderType={orderFlow}
         totalPrice={totalPrice}
         deliveryCharge={deliveryCharge}
         formData={checkoutData}
+        freebieItem={freebieItem}
         onEdit={handleEditCheckout}
         onBack={handleBackFromOrderSummary}
       />
     );
   }
 
-  return null;
+  if (!content) return null;
+
+  const isLanding = step === STEPS.LANDING;
+  return (
+    <div className="app-wrapper">
+      <Navbar variant={isLanding ? 'landing' : 'default'} />
+      {content}
+    </div>
+  );
 }
 
 export default App;

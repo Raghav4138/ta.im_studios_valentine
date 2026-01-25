@@ -5,6 +5,7 @@ export default function DayBuilder({
   selectedItems,
   onSelectProduct,
   onRemoveItem,
+  onUpdateProduct,
   totalPrice,
   onNext,
   onBack,
@@ -15,6 +16,8 @@ export default function DayBuilder({
   useEffect(() => {
     setSelected(new Set(selectedItems.map((item) => item.id)));
   }, [selectedItems, day.id]);
+
+  const selectedMap = new Map(selectedItems.map((item) => [item.id, item]));
 
   const handleSelectProduct = (product) => {
     // For Valentine's Day, allow multiple selections
@@ -43,19 +46,45 @@ export default function DayBuilder({
   };
 
   const isValentinesDay = day.isMultiSelect;
+  const isChocolateDay = day.id === 'chocolate-day';
+
+  const dayTaglines = {
+    'propose-day': 'Seal The Moment',
+    'chocolate-day': 'Sweeten The Love',
+    'teddy-day': 'Soft. Cute. Yours.',
+    'promise-day': 'Together, No Matter What',
+    'kiss-day': 'Seal It With Love',
+    'valentines-day': 'Love, Perfected',
+  };
+
+  const subtitle = dayTaglines[day.id] || '';
+
+  const handlePriceSelect = (product, price) => {
+    if (!onUpdateProduct) return;
+    const existing = selectedMap.get(product.id);
+    const nextQty = existing?.qty ? Math.max(existing.qty, 1) : 1;
+    onUpdateProduct(product, { price, qty: nextQty });
+  };
+
+  const handleQtyChange = (product, delta) => {
+    if (!onUpdateProduct) return;
+    const existing = selectedMap.get(product.id);
+    if (!existing) return;
+    const nextQty = Math.max((existing.qty || 0) + delta, 0);
+    onUpdateProduct(product, { price: existing.price, qty: nextQty });
+  };
 
   return (
     <div className="screen day-builder-screen">
       {/* Header */}
       <div className="day-header-box">
-        <img src="/logo.png" alt="Logo" className="day-logo" />
         <h1 className="day-title">{day.name}</h1>
         <div className="day-divider">
           <span className="diamond" />
           <span className="line" />
           <span className="diamond" />
         </div>
-        <p className="day-subtitle">Say it With {day.name.split(' ')[0]}s</p>
+        {subtitle && <p className="day-subtitle">{subtitle}</p>}
       </div>
 
       {/* Main Content */}
@@ -115,6 +144,53 @@ export default function DayBuilder({
                 </div>
               </div>
             ))}
+          </div>
+        ) : isChocolateDay ? (
+          <div className="products-grid">
+            {day.options.map((product) => {
+              const selectedItem = selectedMap.get(product.id);
+              const selectedPrice = selectedItem?.price;
+              const qty = selectedItem?.qty || 0;
+              return (
+                <div key={product.id} className="product-card chocolate-card">
+                  <div className="product-image">
+                    <img src={product.image} alt={product.name} />
+                  </div>
+                  <h4>{product.name}</h4>
+                  <div className="price-options">
+                    {product.priceOptions.map((price) => (
+                      <button
+                        key={price}
+                        type="button"
+                        className={`price-chip ${selectedPrice === price ? 'selected' : ''}`}
+                        onClick={() => handlePriceSelect(product, price)}
+                      >
+                        ₹{price}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="qty-control">
+                    <button
+                      type="button"
+                      className="qty-btn"
+                      onClick={() => handleQtyChange(product, -1)}
+                      disabled={!qty}
+                    >
+                      −
+                    </button>
+                    <span className="qty-value">{qty}</span>
+                    <button
+                      type="button"
+                      className="qty-btn"
+                      onClick={() => handleQtyChange(product, 1)}
+                      disabled={!selectedPrice}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : (
           // Regular days - Show flat product list

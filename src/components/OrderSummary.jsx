@@ -7,20 +7,29 @@ export default function OrderSummary({
   answers,
   selectedItems,
   selectedItemsByDay,
+  orderDays = VALENTINE_DAYS,
+  orderType = 'hamper',
   totalPrice,
   deliveryCharge,
   formData,
+  freebieItem,
   onEdit,
   onBack,
 }) {
-  const discountAmount = formData.discountAmount || 0;
-  const finalTotal = totalPrice - discountAmount + deliveryCharge;
+  const finalTotal = totalPrice + deliveryCharge;
 
   const generateWhatsAppMessage = () => {
-    const selectedLines = VALENTINE_DAYS.map((day) => {
+    const selectedLines = orderDays.map((day) => {
       const items = selectedItemsByDay[day.id] || [];
       if (!items.length) return null;
-      const joined = items.map((item) => `${item.name} - ₹${item.price}`).join(' + ');
+      const joined = items
+        .map((item) => {
+          if (item.isChocolateVariant) {
+            return `${item.name} (₹${item.price}) (${item.qty}pcs)`;
+          }
+          return `${item.name} - ₹${item.price}`;
+        })
+        .join(' + ');
       return `${day.name}: ${joined}`;
     }).filter(Boolean);
 
@@ -32,18 +41,27 @@ export default function OrderSummary({
       ? `\n\nGift Message: "${formData.giftMessage}"`
       : '';
 
-    const couponInfo = formData.couponCode
-      ? `\nCoupon Applied: ${formData.couponCode}\nDiscount: ₹${discountAmount}`
+    const freebieInfo = freebieItem
+      ? `\n\nSurprise Freebie: ${freebieItem.name} - FREE!\nCOUPON APPLIED: ${formData.couponCode}`
       : '';
 
-    const totalLine = `Subtotal: ₹${totalPrice}${couponInfo}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
+    const totalLine = `Subtotal: ₹${totalPrice}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
 
-    const message = `Hello, I want to order a Valentine Hamper from Taim Studios.
+    const headerLine =
+      orderType === 'bouquets'
+        ? 'Hello, I want to order a Bouquet from Taim Studios.'
+        : 'Hello, I want to order a Valentine Hamper from Taim Studios.';
 
+    const preferences =
+      orderType === 'bouquets'
+        ? ''
+        : `
 For: ${answers.gender}
 Age: ${answers.age}
 Vibe: ${answers.vibe}
+`;
 
+    const message = `${headerLine}${preferences}
 Selected Items:
 ${itemsList}
 
@@ -54,7 +72,7 @@ Address: ${formData.address}
 Pincode: ${formData.pincode}
 
 ${totalLine}
-Total Payable: ₹${finalTotal}${giftMessage}
+Total Payable: ₹${finalTotal}${giftMessage}${freebieInfo}
 
 Please confirm.`;
 
@@ -66,7 +84,6 @@ Please confirm.`;
   return (
     <div className="screen order-summary-screen">
       <div className="day-header-box">
-        <img src="/logo.png" alt="Taim Studios" className="day-logo" />
         <h1 className="day-title">Order Summary</h1>
         <div className="day-divider">
           <span className="line"></span>
@@ -93,25 +110,41 @@ Please confirm.`;
         </div>
 
         {/* Preferences */}
-        <div className="summary-section">
-          <h3>Your Preferences</h3>
-          <div className="summary-box">
-            <p>For: <strong>{answers.gender}</strong></p>
-            <p>Age: <strong>{answers.age}</strong></p>
-            <p>Vibe: <strong>{answers.vibe}</strong></p>
+        {orderType !== 'bouquets' && (
+          <div className="summary-section">
+            <h3>Your Preferences</h3>
+            <div className="summary-box">
+              <p>For: <strong>{answers.gender}</strong></p>
+              <p>Age: <strong>{answers.age}</strong></p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Items */}
         <div className="summary-section">
-          <h3>Selected Items ({selectedItems.length})</h3>
+          <h3>Selected Items ({selectedItems.length + (freebieItem ? 1 : 0)})</h3>
           <div className="summary-box items-box">
             {selectedItems.map((item) => (
               <div key={item.id} className="summary-item">
-                <span>{item.name}</span>
-                <span className="price">₹{item.price}</span>
+                <span>
+                  {item.isChocolateVariant
+                    ? `${item.name} (₹${item.price}) (${item.qty}pcs)`
+                    : item.name}
+                </span>
+                <span className="price">
+                  ₹{item.isChocolateVariant ? item.price * item.qty : item.price}
+                </span>
               </div>
             ))}
+            {freebieItem && (
+              <div key={freebieItem.id} className="summary-item freebie-item freebie-enter">
+                <span className="freebie-name">
+                  {freebieItem.name}
+                  <span className="freebie-badge">FREE</span>
+                </span>
+                <span className="price freebie-price">₹{freebieItem.price}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -133,12 +166,6 @@ Please confirm.`;
               <span>Subtotal:</span>
               <span>₹{totalPrice}</span>
             </div>
-            {discountAmount > 0 && (
-              <div className="price-detail discount">
-                <span>Discount (LOVE14):</span>
-                <span>-₹{discountAmount}</span>
-              </div>
-            )}
             {deliveryCharge > 0 && (
               <div className="price-detail">
                 <span>Delivery Charge:</span>

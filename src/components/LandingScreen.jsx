@@ -1,62 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function LandingScreen({ onStart }) {
+export default function LandingScreen({ onStartHamper, onStartBouquets }) {
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
+  const handleComingSoon = () => {
+    setShowComingSoon(true);
+    setTimeout(() => setShowComingSoon(false), 1500);
+  };
+
   return (
     <div className="landing-wrapper">
-      {/* Background */}
-      <img src="/landing-bg.png" alt="Background" className="landing-bg" />
-
       {/* Content */}
-      <div className="landing-content">
+      <div className="landing-content landing-simple">
+        <img
+          src="../landing-hero.png"
+          alt="Taim Studio"
+          className="landing-hero"
+        />
 
-        <img src="/logo.png" alt="Taim Studios" className="landing-logo" />
-
-        <h1 className="landing-title">
-          Personalized<br />Valentines Hamper
-        </h1>
-
-        <div className="landing-divider">
-          <span className="diamond" />
-          <span className="line" />
-          <span className="diamond" />
-        </div>
-
-        <p className="landing-subtitle">
-          Pick gifts for each day and create a memorable week.
-        </p>
-
-        <button className="landing-cta" onClick={onStart}>
-          Make your Hamper Now
-        </button>
-
-        <h2 className="landing-connect-title">Connect With Us</h2>
-
-        <div className="landing-divider small">
-          <span className="diamond" />
-          <span className="line" />
-          <span className="diamond" />
-        </div>
-
-        <div className="landing-socials">
-          <a
-            href="https://instagram.com/ta.im.studio"
-            target="_blank"
-            rel="noreferrer"
-            className="social-btn"
+        <div className="landing-actions">
+          <button className="landing-action" onClick={onStartHamper}>
+            Personalized 7 Days Hamper
+          </button>
+          <button className="landing-action" onClick={onStartBouquets}>
+            Bouquets
+          </button>
+          <button
+            className="landing-action landing-action--disabled"
+            onClick={handleComingSoon}
           >
-            📷 @ta.im.studio
-          </a>
-
-          <a
-            href="https://wa.me/919569941138"
-            target="_blank"
-            rel="noreferrer"
-            className="social-btn"
-          >
-            💬 +91 95699 41138
-          </a>
+            {showComingSoon ? 'Coming Soon' : 'Hampers'}
+          </button>
         </div>
-
       </div>
     </div>
   );

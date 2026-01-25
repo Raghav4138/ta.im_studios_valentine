@@ -4,11 +4,11 @@ export const VALENTINE_DAYS = [
     name: "Rose Day",
     date: "Feb 7",
     options: [
-      { id: "r1", name: "Single Satin Rose Bouquet", price: 149, image: "/products/rose_single_crochet_149.jpeg" },
-      { id: "r2", name: "Single Crochet Rose with Card", price: 199, image: "/products/rose_single_crochet_199.jpeg" },
-      { id: "r3", name: "Single Crochet Tulip Bouquet", price: 299, image: "/products/tulip_single_crochet_299.png" },
-      { id: "r4", name: "Handmade Crochet Rose Trio Bouquet", price: 499, image: "/products/rose_crochet_trio_499.jpeg" },
-      { id: "r5", name: "Luxury Satin Rose Bouquet (8 Roses)", price: 799, image: "/products/rose_satin_bouquet_8_799.jpeg" },
+      { id: "r1", name: "Single Satin Rose Bouquet", price: 99, image: "/products/rose_single_crochet_149.jpeg" },
+      { id: "r2", name: "Single Crochet Rose with Card", price: 179, image: "/products/rose_single_crochet2.jpeg" },
+      { id: "r3", name: "Single Crochet Tulip", price: 179, image: "/products/tulip_single_crochet_299.png" },
+      // { id: "r4", name: "Handmade Crochet Rose Trio Bouquet", price: 499, image: "/products/rose_crochet_trio_499.jpeg" },
+      // { id: "r5", name: "Luxury Satin Rose Bouquet (8 Roses)", price: 799, image: "/products/rose_satin_bouquet_8_799.jpeg" },
     ],
   },
   {
@@ -16,9 +16,9 @@ export const VALENTINE_DAYS = [
     name: "Propose Day",
     date: "Feb 8",
     options: [
-      { id: "p1", name: "Proposal Card with Ring Slot", price: 99, image: "/products/propose_card_ring_99.png" },
+      { id: "p1", name: "Proposal Card with Ring", price: 99, image: "/products/propose_card_ring_99.png" },
       { id: "p2", name: "Classic Ring Box", price: 149, image: "/products/propose_basic_ringbox_149.png" },
-      { id: "p3", name: "Handmade Crochet Ring Box", price: 299, image: "/products/propose_crochet_ringbox_299.png" },
+      { id: "p3", name: "Handmade Crochet Ring Box", price: 249, image: "/products/propose_crochet_ringbox_299.png" },
     ],
   },
   {
@@ -26,9 +26,10 @@ export const VALENTINE_DAYS = [
     name: "Chocolate Day",
     date: "Feb 9",
     options: [
-      { id: "c1", name: "Chocolate Bouquet", price: 149, image: "/products/choco_basic_bouquet_149.png" },
-      { id: "c2", name: "Cadbury Valentine Pack with Card", price: 349, image: "/products/choco_cadbury_card_349.png" },
-      { id: "c3", name: "Chocolate Cake Surprise Hamper", price: 599, image: "/products/choco_cake_hamper_599.png" },
+      { id: "c1", name: "KitKat", priceOptions: [25, 35], image: "/products/choco-kitkat.jpeg" },
+      { id: "c2", name: "Cadbury", priceOptions: [20, 80, 100], image: "/products/choco-cadbury.jpeg" },
+      { id: "c3", name: "Cadbury Silk Heart", priceOptions: [350], image: "/products/choco-cadbury-silk-heart.webp" },
+      { id: "c4", name: "Munch Mini", priceOptions: [65], image: "/products/choco-munch-mini.jpeg" },
     ],
   },
   {
@@ -46,9 +47,10 @@ export const VALENTINE_DAYS = [
     name: "Promise Day",
     date: "Feb 11",
     options: [
+      { id: "pr3", name: "Handwritten Promise Letter", price: 79, image: "/products/promise_letter.jpeg" },
       { id: "pr1", name: "Couple Bracelets Set", price: 99, image: "/products/promise_bracelets_99.jpeg" },
       { id: "pr2", name: "Couple Keychain Set", price: 199, image: "/products/promise_keychain_199.jpeg" },
-      { id: "pr3", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
+      // { id: "pr3", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
     ],
   },
   {
@@ -66,9 +68,10 @@ export const VALENTINE_DAYS = [
     name: "Kiss Day",
     date: "Feb 13",
     options: [
+      { id: "k2", name: "Kiss Coupons", price: 99, image: "/products/kiss_coupons_99.jpeg" },
       { id: "k1", name: "Kiss Chocolate Jar", price: 199, image: "/products/kiss_choco_jar_199.jpeg" },
-      { id: "k2", name: "Lip Care Mini Hamper", price: 299, image: "/products/kiss_lipcare_299.jpeg" },
-      { id: "k3", name: "Kiss-Themed Painted Top", price: 599, image: "/products/kiss_painted_top_599.jpeg" },
+      // { id: "k2", name: "Lip Care Mini Hamper", price: 299, image: "/products/kiss_lipcare_299.jpeg" },
+      { id: "k3", name: "Kiss-Themed Painted Top", price: 799, image: "/products/kiss_painted_top_599.jpeg" },
     ],
   },
   {
@@ -86,24 +89,46 @@ export const VALENTINE_DAYS = [
         ],
       },
       {
-        category: "Bouquets",
+        category: "Others Products",
         items: [
-          { id: "vb1", name: "Mini Bouquet", price: 299, image: "/products/val_bouquet_299.jpeg" },
-          { id: "vb2", name: "Standard Bouquet", price: 599, image: "/products/val_bouquet_599.jpeg" },
-          { id: "vb3", name: "Premium Bouquet", price: 1199, image: "/products/val_bouquet_1199.jpeg" },
-          { id: "vb4", name: "Luxury Bouquet", price: 1499, image: "/products/val_bouquet_1499.jpeg" },
+          { id: "vo1", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
+          { id: "vo2", name: "DIY Ceramic Mug", price: 99, image: "/products/diy_ceramic_mug_99.jpeg" },
         ],
       },
-      {
-        category: "Hampers",
-        items: [
-          { id: "vh1", name: "Basic Valentine Hamper", price: 299, image: "/products/val_hamper_basic_299.png" },
-          { id: "vh2", name: "Standard Valentine Hamper", price: 499, image: "/products/val_hamper_standard_499.png" },
-          { id: "vh3", name: "Premium Valentine Hamper", price: 1099, image: "/products/val_hamper_premium_1099.png" },
-        ],
-      },
+      
+      // {
+      //   category: "Bouquets",
+      //   items: [
+      //     { id: "vb1", name: "Mini Bouquet", price: 299, image: "/products/val_bouquet_299.jpeg" },
+      //     { id: "vb2", name: "Standard Bouquet", price: 599, image: "/products/val_bouquet_599.jpeg" },
+      //     { id: "vb3", name: "Premium Bouquet", price: 1199, image: "/products/val_bouquet_1199.jpeg" },
+      //     { id: "vb4", name: "Luxury Bouquet", price: 1499, image: "/products/val_bouquet_1499.jpeg" },
+      //   ],
+      // },
+      // {
+      //   category: "Hampers",
+      //   items: [
+      //     { id: "vh1", name: "Basic Valentine Hamper", price: 299, image: "/products/val_hamper_basic_299.png" },
+      //     { id: "vh2", name: "Standard Valentine Hamper", price: 499, image: "/products/val_hamper_standard_499.png" },
+      //     { id: "vh3", name: "Premium Valentine Hamper", price: 1099, image: "/products/val_hamper_premium_1099.png" },
+      //   ],
+      // },
     ],
   },
 ];
 
 export const DELIVERY_CHARGE = 250;
+
+export const BOUQUETS = [
+  { id: "vb1", name: "Mini Bouquet", price: 299, image: "/products/val_bouquet_299.jpeg" },
+  { id: "vb2", name: "Standard Bouquet", price: 599, image: "/products/val_bouquet_599.jpeg" },
+  { id: "vb3", name: "Premium Bouquet", price: 1199, image: "/products/val_bouquet_1199.jpeg" },
+  { id: "vb4", name: "Luxury Bouquet", price: 1499, image: "/products/val_bouquet_1499.jpeg" },
+];
+
+export const SURPRISE_FREEBIE = {
+  id: 'freebie-love14',
+  name: '🎁 Mystery Gift',
+  price: 0,
+  isFreebie: true,
+};

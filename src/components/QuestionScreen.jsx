@@ -4,7 +4,6 @@ export default function QuestionScreen({ question, subtitle, options, onSelect, 
   return (
     <div className="screen question-screen">
       <div className="question-header-box">
-        <img src="/logo.png" alt="Logo" className="question-logo" />
         <h2 className="question-title">{question}</h2>
         <div className="question-divider">
           <span className="diamond" />
@@ -21,18 +20,24 @@ export default function QuestionScreen({ question, subtitle, options, onSelect, 
             className="question-option-card"
             onClick={() => onSelect(option.value)}
           >
-            {option.image && (
-              <img src={option.image} alt={option.label} className="option-crown" />
-            )}
-            <div className="option-divider">
-              <span className="diamond" />
-              <span className="line" />
-              <span className="diamond" />
+            <div className="option-image-col">
+              {option.image && (
+                <img src={option.image} alt={option.label} className="option-image" />
+              )}
             </div>
-            <span className="option-label">{option.label}</span>
-            {option.subtext && (
-              <span className="option-subtext">{option.subtext}</span>
-            )}
+            <div className="option-content-col">
+              <span className="option-label">{option.label}</span>
+              {option.subtext && (
+                <>
+                  <div className="option-divider">
+                    <span className="diamond" />
+                    <span className="line" />
+                    <span className="diamond" />
+                  </div>
+                  <span className="option-subtext">{option.subtext}</span>
+                </>
+              )}
+            </div>
           </button>
         ))}
       </div>
