@@ -51,10 +51,13 @@ export default function DayBuilder({
   const dayTaglines = {
     'propose-day': 'Seal The Moment',
     'chocolate-day': 'Sweeten The Love',
+    'hug-day': 'A Warm Embrace',
+    'rose-day': 'Blooming Love',
     'teddy-day': 'Soft. Cute. Yours.',
     'promise-day': 'Together, No Matter What',
     'kiss-day': 'Seal It With Love',
     'valentines-day': 'Love, Perfected',
+    bouquets: 'Pick Your Perfect Bouquet',
   };
 
   const subtitle = dayTaglines[day.id] || '';

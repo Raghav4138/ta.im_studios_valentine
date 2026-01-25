@@ -16,7 +16,8 @@ export default function OrderSummary({
   onEdit,
   onBack,
 }) {
-  const finalTotal = totalPrice + deliveryCharge;
+  const couponDiscount = formData?.couponDiscount || 0;
+  const finalTotal = totalPrice - couponDiscount + deliveryCharge;
 
   const generateWhatsAppMessage = () => {
     const selectedLines = orderDays.map((day) => {
@@ -45,7 +46,12 @@ export default function OrderSummary({
       ? `\n\nSurprise Freebie: ${freebieItem.name} - FREE!\nCOUPON APPLIED: ${formData.couponCode}`
       : '';
 
-    const totalLine = `Subtotal: ₹${totalPrice}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
+    const discountInfo =
+      orderType === 'bouquets' && couponDiscount > 0
+        ? `\nCoupon (BLOOM10): -₹${couponDiscount}`
+        : '';
+
+    const totalLine = `Subtotal: ₹${totalPrice}${discountInfo}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
 
     const headerLine =
       orderType === 'bouquets'
@@ -166,6 +172,12 @@ Please confirm.`;
               <span>Subtotal:</span>
               <span>₹{totalPrice}</span>
             </div>
+            {couponDiscount > 0 && (
+              <div className="price-detail">
+                <span>Coupon (BLOOM10) - 10%:</span>
+                <span>-₹{couponDiscount}</span>
+              </div>
+            )}
             {deliveryCharge > 0 && (
               <div className="price-detail">
                 <span>Delivery Charge:</span>

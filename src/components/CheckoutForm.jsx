@@ -16,6 +16,7 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
   const [isCouponApplied, setIsCouponApplied] = useState(false);
   const [couponMessage, setCouponMessage] = useState('');
   const [appliedCouponCode, setAppliedCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,6 +28,21 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
 
   const handleApplyCoupon = () => {
     const trimmedCode = couponCode.trim().toUpperCase();
+    if (orderType === 'bouquets') {
+      if (trimmedCode === 'BLOOM10') {
+        const discount = Math.round(totalPrice * 0.1);
+        setAppliedCouponCode('BLOOM10');
+        setIsCouponApplied(true);
+        setCouponDiscount(discount);
+        setCouponMessage('🎉 10% discount applied!');
+      } else {
+        setIsCouponApplied(false);
+        setCouponDiscount(0);
+        setCouponMessage('Invalid coupon code');
+      }
+      return;
+    }
+
     if (trimmedCode.endsWith('LOVE14')) {
       setAppliedCouponCode(couponCode.trim());
       setIsCouponApplied(true);
@@ -45,7 +61,8 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
     setAppliedCouponCode('');
     setIsCouponApplied(false);
     setCouponMessage('');
-    if (onFreebieRemove) {
+    setCouponDiscount(0);
+    if (orderType !== 'bouquets' && onFreebieRemove) {
       onFreebieRemove();
     }
   };
@@ -69,12 +86,13 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
       onSubmit({
         ...formData,
         couponCode: appliedCouponCode,
+        couponDiscount,
       });
     }
   };
 
   const subtotal = totalPrice;
-  const finalTotal = subtotal + deliveryCharge;
+  const finalTotal = subtotal - couponDiscount + deliveryCharge;
 
   return (
     <div className="screen checkout-screen">
@@ -96,10 +114,17 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
             <span>₹{subtotal}</span>
           </div>
           {isCouponApplied && (
-            <div className="summary-row freebie-added">
-              <span>🎁 Surprise Freebie:</span>
-              <span>FREE</span>
-            </div>
+            orderType === 'bouquets' ? (
+              <div className="summary-row discount-row">
+                <span>Coupon (BLOOM10) - 10%:</span>
+                <span>-₹{couponDiscount}</span>
+              </div>
+            ) : (
+              <div className="summary-row freebie-added">
+                <span>🎁 Surprise Freebie:</span>
+                <span>FREE</span>
+              </div>
+            )
           )}
           {deliveryCharge > 0 && (
             <div className="summary-row">
@@ -113,39 +138,37 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
           </div>
         </div>
 
-        {orderType !== 'bouquets' && (
-          <div className="coupon-section">
-            <h3>Have a Coupon Code?</h3>
-            <div className="coupon-input-group">
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                placeholder="Enter coupon code"
-                className="coupon-input"
-                disabled={isCouponApplied}
-              />
-              <button
-                type="button"
-                onClick={handleApplyCoupon}
-                className="btn btn-apply"
-                disabled={isCouponApplied}
-              >
-                Apply
-              </button>
-            </div>
-            {couponMessage && (
-              <p className={`coupon-message ${isCouponApplied ? 'success' : 'error'}`}>
-                {couponMessage}
-              </p>
-            )}
-            {isCouponApplied && (
-              <p className="remove-coupon" onClick={handleRemoveCoupon}>
-                Remove coupon
-              </p>
-            )}
+        <div className="coupon-section">
+          <h3>Have a Coupon Code?</h3>
+          <div className="coupon-input-group">
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+              placeholder={orderType === 'bouquets' ? 'Enter Coupon Code' : 'Enter coupon code'}
+              className="coupon-input"
+              disabled={isCouponApplied}
+            />
+            <button
+              type="button"
+              onClick={handleApplyCoupon}
+              className="btn btn-apply"
+              disabled={isCouponApplied}
+            >
+              Apply
+            </button>
           </div>
-        )}
+          {couponMessage && (
+            <p className={`coupon-message ${isCouponApplied ? 'success' : 'error'}`}>
+              {couponMessage}
+            </p>
+          )}
+          {isCouponApplied && (
+            <p className="remove-coupon" onClick={handleRemoveCoupon}>
+              Remove coupon
+            </p>
+          )}
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="checkout-form">

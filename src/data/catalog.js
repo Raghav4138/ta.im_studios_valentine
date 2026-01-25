@@ -91,8 +91,8 @@ export const VALENTINE_DAYS = [
       {
         category: "Others Products",
         items: [
-          { id: "vo1", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
           { id: "vo2", name: "DIY Ceramic Mug", price: 99, image: "/products/diy_ceramic_mug_99.jpeg" },
+          { id: "vo1", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
         ],
       },
       
@@ -120,10 +120,12 @@ export const VALENTINE_DAYS = [
 export const DELIVERY_CHARGE = 250;
 
 export const BOUQUETS = [
-  { id: "vb1", name: "Mini Bouquet", price: 299, image: "/products/val_bouquet_299.jpeg" },
-  { id: "vb2", name: "Standard Bouquet", price: 599, image: "/products/val_bouquet_599.jpeg" },
-  { id: "vb3", name: "Premium Bouquet", price: 1199, image: "/products/val_bouquet_1199.jpeg" },
-  { id: "vb4", name: "Luxury Bouquet", price: 1499, image: "/products/val_bouquet_1499.jpeg" },
+  { id: "vb1", name: "Polaroid Bouquet", price: 299, height: 12, image: "/products/val_bouquet_299.jpeg" },
+  { id: "vb2", name: "Clock Lip Bouquet", price: 499, height: 14, image: "/products/val_bouquet_599.jpeg" },
+  { id: "vb6", name: "Basic Bouquet Hamper", price: 599, height: 16, image: "/products/basic-bouquet-hamper-599.jpeg" },
+  { id: "vb5", name: "Standard Bouquet Hamper", price: 999, height: 18, image: "/products/standard-boquet-999.jpeg" },
+  { id: "vb3", name: "Crochet Heart Bouquet", price: 1199, height: 20, image: "/products/val_bouquet_1199.jpeg" },
+  { id: "vb4", name: "Premium Bouquet Hamper", price: 1499, height: 22, image: "/products/val_bouquet_1499.jpeg" },
 ];
 
 export const SURPRISE_FREEBIE = {

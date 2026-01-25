@@ -168,6 +168,8 @@ function App() {
   const allSelectedItems =
     orderFlow === 'bouquets' ? bouquetSelection : Object.values(selectedItemsByDay).flat();
 
+  const sortedBouquets = [...BOUQUETS].sort((a, b) => (a.height || 0) - (b.height || 0));
+
   const totalPrice = allSelectedItems.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
 
   const deliveryCharge =
@@ -225,7 +227,7 @@ function App() {
   if (step === STEPS.BOUQUETS) {
     content = (
       <DayBuilder
-        day={{ id: 'bouquets', name: 'Bouquets', options: BOUQUETS }}
+        day={{ id: 'bouquets', name: 'Bouquets', options: sortedBouquets }}
         selectedItems={bouquetSelection}
         onSelectProduct={handleBouquetSelect}
         onRemoveItem={handleBouquetRemove}

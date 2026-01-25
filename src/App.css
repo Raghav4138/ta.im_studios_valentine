@@ -72,17 +72,18 @@ body {
 }
 
 .landing-content.landing-simple {
-  gap: 24px;
+  gap: 0;
   justify-content: flex-start;
-  padding: 16px;
+  padding: 0;
 }
 
 .landing-hero {
   width: 100%;
-  max-width: 340px;
+  max-width: none;
   height: auto;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
 }
 
 .landing-actions {
@@ -90,10 +91,13 @@ body {
   max-width: 340px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
+  align-items: stretch;
+  padding: 120px 16px 32px;
 }
 
 .landing-action {
+  width: 100%;
   padding: 16px 24px;
   border-radius: 999px;
   border: 1.5px solid #F3A3C8;
