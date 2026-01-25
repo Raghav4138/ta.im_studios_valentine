@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 import { VALENTINE_DAYS, DELIVERY_CHARGE } from './data/catalog';
 import LandingScreen from './components/LandingScreen';
@@ -135,91 +136,100 @@ function App() {
       ? DELIVERY_CHARGE
       : 0;
 
-  // Render steps
-  if (step === STEPS.LANDING) {
-    return <LandingScreen onStart={handleStartBuilder} />;
-  }
+  // Render current step
+  const renderStep = () => {
+    if (step === STEPS.LANDING) {
+      return <LandingScreen onStart={handleStartBuilder} />;
+    }
 
-  if (step === STEPS.GENDER) {
-    return (
-      <QuestionScreen
-        question="Who is this for?"
-        subtitle="Select the best for your loved one"
-        options={genderOptions}
-        onSelect={handleGenderSelect}
-        onBack={() => setStep(STEPS.LANDING)}
-      />
-    );
-  }
+    if (step === STEPS.GENDER) {
+      return (
+        <QuestionScreen
+          question="Who is this for?"
+          subtitle="Select the best for your loved one"
+          options={genderOptions}
+          onSelect={handleGenderSelect}
+          onBack={() => setStep(STEPS.LANDING)}
+        />
+      );
+    }
 
-  if (step === STEPS.AGE) {
-    return (
-      <QuestionScreen
-        question="Select their Age"
-        subtitle="although age is just a number"
-        options={ageOptions}
-        onSelect={handleAgeSelect}
-        onBack={() => setStep(STEPS.GENDER)}
-      />
-    );
-  }
+    if (step === STEPS.AGE) {
+      return (
+        <QuestionScreen
+          question="Select their Age"
+          subtitle="although age is just a number"
+          options={ageOptions}
+          onSelect={handleAgeSelect}
+          onBack={() => setStep(STEPS.GENDER)}
+        />
+      );
+    }
 
-  // if (step === STEPS.VIBE) {
-  //   return (
-  //     <QuestionScreen
-  //       question="What's the vibe?"
-  //       options={vibeOptions}
-  //       onSelect={handleVibeSelect}
-  //       onBack={() => setStep(STEPS.AGE)}
-  //     />
-  //   );
-  // }
+    // if (step === STEPS.VIBE) {
+    //   return (
+    //     <QuestionScreen
+    //       question="What's the vibe?"
+    //       options={vibeOptions}
+    //       onSelect={handleVibeSelect}
+    //       onBack={() => setStep(STEPS.AGE)}
+    //     />
+    //   );
+    // }
 
-  if (step === STEPS.DAY_BUILDER) {
-    const currentDay = VALENTINE_DAYS[currentDayIndex];
-    const isLastDay = currentDayIndex === VALENTINE_DAYS.length - 1;
+    if (step === STEPS.DAY_BUILDER) {
+      const currentDay = VALENTINE_DAYS[currentDayIndex];
+      const isLastDay = currentDayIndex === VALENTINE_DAYS.length - 1;
 
-    return (
-      <DayBuilder
-        day={currentDay}
-        selectedItems={selectedItemsByDay[currentDay.id]}
-        onSelectProduct={handleSelectProduct}
-        onRemoveItem={handleRemoveItem}
-        totalPrice={totalPrice}
-        onNext={handleNextDay}
-        onBack={handleBackDay}
-        isLastDay={isLastDay}
-      />
-    );
-  }
+      return (
+        <DayBuilder
+          day={currentDay}
+          selectedItems={selectedItemsByDay[currentDay.id]}
+          onSelectProduct={handleSelectProduct}
+          onRemoveItem={handleRemoveItem}
+          totalPrice={totalPrice}
+          onNext={handleNextDay}
+          onBack={handleBackDay}
+          isLastDay={isLastDay}
+        />
+      );
+    }
 
-  if (step === STEPS.CHECKOUT) {
-    return (
-      <CheckoutForm
-        totalPrice={totalPrice}
-        deliveryCharge={deliveryCharge}
-        onSubmit={handleCheckoutSubmit}
-        onBack={handleBackFromCheckout}
-      />
-    );
-  }
+    if (step === STEPS.CHECKOUT) {
+      return (
+        <CheckoutForm
+          totalPrice={totalPrice}
+          deliveryCharge={deliveryCharge}
+          onSubmit={handleCheckoutSubmit}
+          onBack={handleBackFromCheckout}
+        />
+      );
+    }
 
-  if (step === STEPS.ORDER_SUMMARY) {
-    return (
-      <OrderSummary
-        answers={answers}
-        selectedItems={allSelectedItems}
-        selectedItemsByDay={selectedItemsByDay}
-        totalPrice={totalPrice}
-        deliveryCharge={deliveryCharge}
-        formData={checkoutData}
-        onEdit={handleEditCheckout}
-        onBack={handleBackFromOrderSummary}
-      />
-    );
-  }
+    if (step === STEPS.ORDER_SUMMARY) {
+      return (
+        <OrderSummary
+          answers={answers}
+          selectedItems={allSelectedItems}
+          selectedItemsByDay={selectedItemsByDay}
+          totalPrice={totalPrice}
+          deliveryCharge={deliveryCharge}
+          formData={checkoutData}
+          onEdit={handleEditCheckout}
+          onBack={handleBackFromOrderSummary}
+        />
+      );
+    }
 
-  return null;
+    return null;
+  };
+
+  return (
+    <>
+      {renderStep()}
+      <Analytics />
+    </>
+  );
 }
 
 export default App;
