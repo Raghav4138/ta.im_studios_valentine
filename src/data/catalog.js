@@ -28,8 +28,8 @@ export const VALENTINE_DAYS = [
     options: [
       { id: "c1", name: "KitKat", priceOptions: [25, 35], image: "/products/choco-kitkat.jpeg" },
       { id: "c2", name: "Cadbury", priceOptions: [20, 80, 100], image: "/products/choco-cadbury.jpeg" },
-      { id: "c3", name: "Cadbury Silk Heart", priceOptions: [350], image: "/products/choco-cadbury-silk-heart.webp" },
-      { id: "c4", name: "Munch Mini", priceOptions: [65], image: "/products/choco-munch-mini.jpeg" },
+      { id: "c3", name: "Cadbury Silk Heart", priceOptions: [370], image: "/products/choco-cadbury-silk-heart.webp" },
+      { id: "c4", name: "Munch Mini", priceOptions: [90], image: "/products/choco-munch-mini.jpeg" },
     ],
   },
   {

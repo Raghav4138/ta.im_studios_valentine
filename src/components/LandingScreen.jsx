@@ -20,16 +20,16 @@ export default function LandingScreen({ onStartHamper, onStartBouquets }) {
 
         <div className="landing-actions">
           <button className="landing-action" onClick={onStartHamper}>
-            Personalized 7 Days Hamper
+            CREATE YOUR HAMPER
           </button>
           <button className="landing-action" onClick={onStartBouquets}>
-            Bouquets
+            BOUQUETS
           </button>
           <button
             className="landing-action landing-action--disabled"
             onClick={handleComingSoon}
           >
-            {showComingSoon ? 'Coming Soon' : 'Hampers'}
+            {showComingSoon ? 'Coming Soon' : 'HAMPERS'}
           </button>
         </div>
       </div>
