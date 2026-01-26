@@ -4,7 +4,8 @@ export const VALENTINE_DAYS = [
     name: "Rose Day",
     date: "Feb 7",
     options: [
-      { id: "r1", name: "Single Satin Rose Bouquet", price: 99, image: "/products/rose_single_crochet_149.jpeg" },
+      // { id: "r1", name: "Single Satin Rose Bouquet", price: 99, image: "/products/rose_single_crochet_149.jpeg" },
+      { id: "r1", name: "Crochet Rose Keychain", price: 99, image: "/products/crochet-rose-keychain-99.jpeg" },
       { id: "r2", name: "Single Crochet Rose with Card", price: 179, image: "/products/rose_single_crochet2.jpeg" },
       { id: "r3", name: "Single Crochet Tulip", price: 179, image: "/products/tulip_single_crochet_299.png" },
       // { id: "r4", name: "Handmade Crochet Rose Trio Bouquet", price: 499, image: "/products/rose_crochet_trio_499.jpeg" },
@@ -123,8 +124,9 @@ export const VALENTINE_DAYS = [
 export const DELIVERY_CHARGE = 250;
 
 export const BOUQUETS = [
+  { id: "vb0", name: "Chocolate Bouquet", price: 199, height: 12, image: "/products/chocolate-bouquet-199.jpeg" },
   { id: "vb1", name: "Polaroid Bouquet", price: 299, height: 12, image: "/products/val_bouquet_299.jpeg" },
-  { id: "vb2", name: "Clock Lip Bouquet", price: 499, height: 14, image: "/products/val_bouquet_599.jpeg" },
+  { id: "vb2", name: "Claw Clip Bouquet", price: 499, height: 14, image: "/products/val_bouquet_599.jpeg" },
   { id: "vb6", name: "Basic Bouquet Hamper", price: 599, height: 16, image: "/products/basic-bouquet-hamper-599.jpeg" },
   { id: "vb5", name: "Standard Bouquet Hamper", price: 999, height: 18, image: "/products/standard-boquet-999.jpeg" },
   { id: "vb3", name: "Crochet Heart Bouquet", price: 1199, height: 20, image: "/products/val_bouquet_1199.jpeg" },
