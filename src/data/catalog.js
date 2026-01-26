@@ -37,9 +37,11 @@ export const VALENTINE_DAYS = [
     name: "Teddy Day",
     date: "Feb 10",
     options: [
-      { id: "t1", name: "Cute Teddy (6\")", price: 299, image: "/products/teddy_6inch_299.jpg" },
-      { id: "t2", name: "Premium Teddy (12\")", price: 499, image: "/products/teddy_12inch_499.jpg" },
-      { id: "t3", name: "Luxury Teddy (18\")", price: 1199, image: "/products/teddy_18inch_1199.jpg" },
+      { id: "t1", name: "Scented Teddy Candle", price: 59, image: "/products/scented-teddy-candle-59.jpeg" },
+      { id: "t2", name: "Teddy Keychain", price: 79, image: "/products/teddy-keychain.jpeg" },
+      { id: "t3", name: "Medium Teddy Bear", price: 449, image: "/products/medium-side-teddy-450.jpeg" },
+      { id: "t4", name: "Large Teddy Bear", price: 549, image: "/products/large-teddy-bear-550.jpeg" },
+      { id: "t5", name: "Couple Teddy Bear", price: 549, image: "/products/couple-teddy-bear-550.jpeg" },
     ],
   },
   {
@@ -92,6 +94,7 @@ export const VALENTINE_DAYS = [
         category: "Others Products",
         items: [
           { id: "vo2", name: "DIY Ceramic Mug", price: 99, image: "/products/diy_ceramic_mug_99.jpeg" },
+          { id: "vo0", name: "Kissing Couple", price: 249, image: "/products/kissing-couple-price-249.jpeg" },
           { id: "vo1", name: "Silver Couple Rings", price: 2499, image: "/products/promise_silver_rings_2499.jpeg" },
         ],
       },
