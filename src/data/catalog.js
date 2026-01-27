@@ -18,7 +18,7 @@ export const VALENTINE_DAYS = [
     date: "Feb 8",
     options: [
       { id: "p1", name: "Proposal Card with Ring", price: 99, image: "/products/propose_card_ring_99.png" },
-      { id: "p2", name: "Classic Ring Box", price: 149, image: "/products/propose_basic_ringbox_149.png" },
+      { id: "p2", name: "Classic Ring Box", price: 149, image: "/products/propose_basic_ringbox_149_2.png" },
       { id: "p3", name: "Handmade Crochet Ring Box", price: 249, image: "/products/propose_crochet_ringbox_299.png" },
     ],
   },
