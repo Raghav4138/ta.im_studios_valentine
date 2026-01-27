@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import './App.css';
-import { VALENTINE_DAYS, BOUQUETS } from './data/catalog';
+import { VALENTINE_DAYS, BOUQUETS, READYMADE_HAMPERS } from './data/catalog';
 import { calculateDeliveryCharge, DELIVERY_CHARGES } from './utils/deliveryCharge';
 import LandingScreen from './components/LandingScreen';
 import QuestionScreen from './components/QuestionScreen';
@@ -9,6 +9,8 @@ import DayBuilder from './components/DayBuilder';
 import CheckoutForm from './components/CheckoutForm';
 import OrderSummary from './components/OrderSummary';
 import Navbar from './components/Navbar';
+import HamperCard from './components/HamperCard';
+import HamperDetails from './components/HamperDetails';
 
 const STEPS = {
   LANDING: 'landing',
@@ -17,6 +19,8 @@ const STEPS = {
   VIBE: 'vibe',
   DAY_BUILDER: 'day_builder',
   BOUQUETS: 'bouquets',
+  READYMADE_HAMPERS: 'readymade_hampers',
+  HAMPER_DETAILS: 'hamper_details',
   CHECKOUT: 'checkout',
   ORDER_SUMMARY: 'order_summary',
 };
@@ -34,6 +38,7 @@ function App() {
 
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
   const [bouquetSelection, setBouquetSelection] = useState([]);
+  const [selectedReadymadeHamper, setSelectedReadymadeHamper] = useState(null);
   const [orderFlow, setOrderFlow] = useState('hamper');
   const [checkoutData, setCheckoutData] = useState(null);
   const [freebieItem, setFreebieItem] = useState(null);
@@ -80,6 +85,24 @@ function App() {
   const handleStartBouquets = () => {
     setOrderFlow('bouquets');
     setStep(STEPS.BOUQUETS);
+  };
+
+  const handleStartReadymadeHampers = () => {
+    setOrderFlow('readymade-hampers');
+    setStep(STEPS.READYMADE_HAMPERS);
+  };
+
+  const handleViewHamperDetails = (hamper) => {
+    setSelectedReadymadeHamper(hamper);
+    setStep(STEPS.HAMPER_DETAILS);
+  };
+
+  const handleBackFromHamperDetails = () => {
+    setStep(STEPS.READYMADE_HAMPERS);
+  };
+
+  const handleProceedFromHamperDetails = () => {
+    setStep(STEPS.CHECKOUT);
   };
 
   const handleSelectProduct = (product) => {
@@ -170,6 +193,10 @@ function App() {
       setStep(STEPS.BOUQUETS);
       return;
     }
+    if (orderFlow === 'readymade-hampers') {
+      setStep(STEPS.HAMPER_DETAILS);
+      return;
+    }
     setCurrentDayIndex(VALENTINE_DAYS.length - 1);
     setStep(STEPS.DAY_BUILDER);
   };
@@ -177,8 +204,14 @@ function App() {
   const handleEditCheckout = () => setStep(STEPS.CHECKOUT);
   const handleBackFromOrderSummary = () => setStep(STEPS.CHECKOUT);
 
-  const allSelectedItems =
-    orderFlow === 'bouquets' ? bouquetSelection : Object.values(selectedItemsByDay).flat();
+  // Calculate selected items based on order flow
+  const allSelectedItems = (() => {
+    if (orderFlow === 'bouquets') return bouquetSelection;
+    if (orderFlow === 'readymade-hampers' && selectedReadymadeHamper) {
+      return [selectedReadymadeHamper];
+    }
+    return Object.values(selectedItemsByDay).flat();
+  })();
 
   const sortedBouquets = [...BOUQUETS].sort((a, b) => (a.height || 0) - (b.height || 0));
 
@@ -190,7 +223,13 @@ function App() {
   let content = null;
 
   if (step === STEPS.LANDING) {
-    content = <LandingScreen onStartHamper={handleStartBuilder} onStartBouquets={handleStartBouquets} />;
+    content = (
+      <LandingScreen
+        onStartHamper={handleStartBuilder}
+        onStartBouquets={handleStartBouquets}
+        onStartReadymadeHampers={handleStartReadymadeHampers}
+      />
+    );
   }
 
   if (step === STEPS.GENDER) {
@@ -247,6 +286,46 @@ function App() {
         onNext={() => setStep(STEPS.CHECKOUT)}
         onBack={() => setStep(STEPS.LANDING)}
         isLastDay
+      />
+    );
+  }
+
+  if (step === STEPS.READYMADE_HAMPERS) {
+    content = (
+      <div className="screen readymade-hampers-screen">
+        <div className="day-header-box">
+          <h1 className="day-title">Hampers</h1>
+          <div className="day-divider">
+            <span className="line"></span>
+            <span className="diamond"></span>
+            <span className="line"></span>
+          </div>
+          <div className="day-subtitle">Choose a ready-made hamper for your loved one</div>
+        </div>
+        <div className="hampers-grid">
+          {READYMADE_HAMPERS.map((hamper) => (
+            <HamperCard
+              key={hamper.id}
+              hamper={hamper}
+              onViewDetails={handleViewHamperDetails}
+            />
+          ))}
+        </div>
+        <div className="hampers-back-action">
+          <button className="btn btn-secondary back-button" onClick={() => setStep(STEPS.LANDING)}>
+            Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === STEPS.HAMPER_DETAILS) {
+    content = (
+      <HamperDetails
+        hamper={selectedReadymadeHamper}
+        onProceed={handleProceedFromHamperDetails}
+        onBack={handleBackFromHamperDetails}
       />
     );
   }

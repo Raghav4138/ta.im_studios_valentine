@@ -53,6 +53,7 @@ export default function CheckoutForm({
   const handleApplyCoupon = () => {
     const trimmedCode = couponCode.trim().toUpperCase();
 
+    // Bouquets flow: only BLOOM10 coupon
     if (orderType === 'bouquets') {
       if (trimmedCode === 'BLOOM10') {
         const discount = Math.round(totalPrice * 0.1);
@@ -69,6 +70,24 @@ export default function CheckoutForm({
       return;
     }
 
+    // Readymade hampers flow: only EARLYBIRD5 coupon
+    if (orderType === 'readymade-hampers') {
+      if (trimmedCode === 'EARLYBIRD5') {
+        setAppliedCouponCode(trimmedCode);
+        setIsCouponApplied(true);
+        const discount = Math.round(totalPrice * 0.05);
+        setCouponDiscount(discount);
+        setCouponMessage('🎉 5% discount applied!');
+      } else {
+        setAppliedCouponCode('');
+        setIsCouponApplied(false);
+        setCouponDiscount(0);
+        setCouponMessage('Invalid coupon code');
+      }
+      return;
+    }
+
+    // Create your hamper flow: EARLYBIRD5 or LOVE14 coupons
     if (trimmedCode === 'EARLYBIRD5') {
       setAppliedCouponCode(trimmedCode);
       setIsCouponApplied(true);

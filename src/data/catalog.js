@@ -133,6 +133,36 @@ export const BOUQUETS = [
   { id: "vb4", name: "Premium Bouquet Hamper", price: 1499, height: 22, image: "/products/val_bouquet_1499.jpeg" },
 ];
 
+/**
+ * READYMADE HAMPERS
+ * Pre-packaged gift hampers with fixed items included
+ * 
+ * To add a new hamper:
+ * 1. Copy an existing hamper object
+ * 2. Update id (use "rh1", "rh2", etc.)
+ * 3. Update name, description, price, image path
+ * 4. Update includedItems array with items in the hamper
+ */
+export const READYMADE_HAMPERS = [
+  {
+    id: "rh1",
+    name: "Valentine's Standard Hamper",
+    description: "A perfect gift with 7 handpicked items for your loved one",
+    price: 699,
+    image: "/products/hampers/valentines-standard-hamper.png",
+    includedItems: [
+      "Crochet Tulip Stick",
+      "Kisses Jar",
+      "Teddy Bear Keychain",
+      "Promise Card with Ring",
+      "Free Kiss Coupons",
+      "Pocket Hug",
+      "KitKat Chocolate",
+    ],
+  },
+  // Add more hampers here by copying the structure above
+];
+
 export const SURPRISE_FREEBIE = {
   id: 'freebie-love14',
   name: '🎁 Mystery Gift',

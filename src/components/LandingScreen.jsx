@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-export default function LandingScreen({ onStartHamper, onStartBouquets }) {
-  const [showComingSoon, setShowComingSoon] = useState(false);
-
-  const handleComingSoon = () => {
-    setShowComingSoon(true);
-    setTimeout(() => setShowComingSoon(false), 1500);
-  };
-
+export default function LandingScreen({ onStartHamper, onStartBouquets, onStartReadymadeHampers }) {
   return (
     <div className="landing-wrapper">
       {/* Content */}
@@ -25,11 +18,8 @@ export default function LandingScreen({ onStartHamper, onStartBouquets }) {
           <button className="landing-action" onClick={onStartBouquets}>
             BOUQUETS
           </button>
-          <button
-            className="landing-action landing-action--disabled"
-            onClick={handleComingSoon}
-          >
-            {showComingSoon ? 'Coming Soon' : 'HAMPERS'}
+          <button className="landing-action" onClick={onStartReadymadeHampers}>
+            READYMADE HAMPERS
           </button>
         </div>
       </div>
