@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import './App.css';
-import { VALENTINE_DAYS, DELIVERY_CHARGE, BOUQUETS } from './data/catalog';
+import { VALENTINE_DAYS, BOUQUETS } from './data/catalog';
+import { calculateDeliveryCharge, DELIVERY_CHARGES } from './utils/deliveryCharge';
 import LandingScreen from './components/LandingScreen';
 import QuestionScreen from './components/QuestionScreen';
 import DayBuilder from './components/DayBuilder';
@@ -36,9 +37,18 @@ function App() {
   const [orderFlow, setOrderFlow] = useState('hamper');
   const [checkoutData, setCheckoutData] = useState(null);
   const [freebieItem, setFreebieItem] = useState(null);
+  
+  // Form data state to persist across navigation
+  const [savedFormData, setSavedFormData] = useState(null);
+  const [currentDeliveryCharge, setCurrentDeliveryCharge] = useState(0);
 
   const handleFreebieAdd = (freebie) => setFreebieItem(freebie);
   const handleFreebieRemove = () => setFreebieItem(null);
+  
+  // Callback to update delivery charge from CheckoutForm
+  const handleDeliveryChargeChange = useCallback((charge) => {
+    setCurrentDeliveryCharge(charge);
+  }, []);
 
   const genderOptions = [
     { label: 'Her', value: 'Her', image: '/queen-crown.png' },
@@ -150,6 +160,8 @@ function App() {
 
   const handleCheckoutSubmit = (formData) => {
     setCheckoutData(formData);
+    setSavedFormData(formData); // Preserve form data
+    setCurrentDeliveryCharge(formData.deliveryCharge || DELIVERY_CHARGES.OUTSTATION);
     setStep(STEPS.ORDER_SUMMARY);
   };
 
@@ -172,8 +184,8 @@ function App() {
 
   const totalPrice = allSelectedItems.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
 
-  const deliveryCharge =
-    checkoutData && checkoutData.city.toLowerCase() !== 'bathinda' ? DELIVERY_CHARGE : 0;
+  // Use delivery charge from checkout data if available, otherwise use current tracked charge
+  const deliveryCharge = checkoutData?.deliveryCharge ?? currentDeliveryCharge;
 
   let content = null;
 
@@ -243,12 +255,13 @@ function App() {
     content = (
       <CheckoutForm
         totalPrice={totalPrice}
-        deliveryCharge={deliveryCharge}
         onSubmit={handleCheckoutSubmit}
         onBack={handleBackFromCheckout}
         onFreebieAdd={handleFreebieAdd}
         onFreebieRemove={handleFreebieRemove}
         orderType={orderFlow}
+        initialFormData={savedFormData}
+        onDeliveryChargeChange={handleDeliveryChargeChange}
       />
     );
   }

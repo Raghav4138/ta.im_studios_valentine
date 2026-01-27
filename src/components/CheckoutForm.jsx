@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SURPRISE_FREEBIE } from '../data/catalog';
+import { calculateDeliveryCharge, DELIVERY_CHARGES } from '../utils/deliveryCharge';
 
-export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onBack, onFreebieAdd, onFreebieRemove, orderType = 'hamper' }) {
-  const [formData, setFormData] = useState({
+export default function CheckoutForm({ 
+  totalPrice, 
+  onSubmit, 
+  onBack, 
+  onFreebieAdd, 
+  onFreebieRemove, 
+  orderType = 'hamper',
+  initialFormData = null,
+  onDeliveryChargeChange,
+}) {
+  const [formData, setFormData] = useState(initialFormData || {
     name: '',
     phone: '',
     city: '',
@@ -17,6 +27,20 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
   const [couponMessage, setCouponMessage] = useState('');
   const [appliedCouponCode, setAppliedCouponCode] = useState('');
   const [couponDiscount, setCouponDiscount] = useState(0);
+
+  // Calculate delivery charge dynamically based on city and pincode
+  const deliveryInfo = useMemo(() => {
+    return calculateDeliveryCharge(formData.city, formData.pincode);
+  }, [formData.city, formData.pincode]);
+
+  const deliveryCharge = deliveryInfo.charge;
+
+  // Notify parent of delivery charge changes
+  useEffect(() => {
+    if (onDeliveryChargeChange) {
+      onDeliveryChargeChange(deliveryCharge);
+    }
+  }, [deliveryCharge, onDeliveryChargeChange]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,6 +124,7 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
         ...formData,
         couponCode: appliedCouponCode,
         couponDiscount,
+        deliveryCharge,
       });
     }
   };
@@ -139,10 +164,22 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
               </div>
             )
           )}
-          {deliveryCharge > 0 && (
-            <div className="summary-row">
+          {formData.city.trim() ? (
+            <>
+              <div className={`summary-row ${deliveryInfo.isLocal ? 'local-delivery' : 'outstation-delivery'}`}>
+                <span>Delivery Charge:</span>
+                <span>₹{deliveryCharge}</span>
+              </div>
+              {deliveryInfo.message && (
+                <div className={`delivery-info-message ${deliveryInfo.isLocal ? 'local' : 'outstation'}`}>
+                  {deliveryInfo.isLocal ? '✓ ' : 'ℹ️ '}{deliveryInfo.message}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="summary-row pending-delivery">
               <span>Delivery Charge:</span>
-              <span>₹{deliveryCharge}</span>
+              <span className="pending-text">Enter city to calculate</span>
             </div>
           )}
           <div className="summary-row total">
@@ -225,6 +262,13 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
               placeholder="Your city"
             />
             {errors.city && <span className="error">{errors.city}</span>}
+            {formData.city && !errors.city && (
+              <span className={`delivery-hint ${deliveryInfo.isLocal ? 'local' : 'outstation'}`}>
+                {deliveryInfo.isLocal 
+                  ? `✓ Local delivery available - ₹${DELIVERY_CHARGES.LOCAL}` 
+                  : `ℹ️ Outstation delivery - ₹${DELIVERY_CHARGES.OUTSTATION}`}
+              </span>
+            )}
           </div>
 
           <div className="form-group">
