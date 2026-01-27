@@ -28,6 +28,7 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
 
   const handleApplyCoupon = () => {
     const trimmedCode = couponCode.trim().toUpperCase();
+
     if (orderType === 'bouquets') {
       if (trimmedCode === 'BLOOM10') {
         const discount = Math.round(totalPrice * 0.1);
@@ -36,6 +37,7 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
         setCouponDiscount(discount);
         setCouponMessage('🎉 10% discount applied!');
       } else {
+        setAppliedCouponCode('');
         setIsCouponApplied(false);
         setCouponDiscount(0);
         setCouponMessage('Invalid coupon code');
@@ -43,16 +45,27 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
       return;
     }
 
-    if (trimmedCode.endsWith('LOVE14')) {
-      setAppliedCouponCode(couponCode.trim());
+    if (trimmedCode === 'EARLYBIRD5') {
+      setAppliedCouponCode(trimmedCode);
       setIsCouponApplied(true);
+      const discount = Math.round(totalPrice * 0.05);
+      setCouponDiscount(discount);
+      setCouponMessage('🎉 5% discount applied!');
+      if (onFreebieRemove) onFreebieRemove();
+    } else if (trimmedCode.endsWith('LOVE14')) {
+      setAppliedCouponCode(trimmedCode);
+      setIsCouponApplied(true);
+      setCouponDiscount(0);
       setCouponMessage('🎉 Surprise freebie added to your order!');
       if (onFreebieAdd) {
         onFreebieAdd(SURPRISE_FREEBIE);
       }
     } else {
+      setAppliedCouponCode('');
       setIsCouponApplied(false);
+      setCouponDiscount(0);
       setCouponMessage('Invalid coupon code');
+      if (onFreebieRemove) onFreebieRemove();
     }
   };
 
@@ -114,9 +127,9 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
             <span>₹{subtotal}</span>
           </div>
           {isCouponApplied && (
-            orderType === 'bouquets' ? (
+            couponDiscount > 0 ? (
               <div className="summary-row discount-row">
-                <span>Coupon (BLOOM10) - 10%:</span>
+                <span>Coupon ({appliedCouponCode}):</span>
                 <span>-₹{couponDiscount}</span>
               </div>
             ) : (
@@ -144,7 +157,10 @@ export default function CheckoutForm({ totalPrice, deliveryCharge, onSubmit, onB
             <input
               type="text"
               value={couponCode}
-              onChange={(e) => setCouponCode(e.target.value)}
+              onChange={(e) => {
+                setCouponCode(e.target.value);
+                if (couponMessage) setCouponMessage('');
+              }}
               placeholder={orderType === 'bouquets' ? 'Enter Coupon Code' : 'Enter coupon code'}
               className="coupon-input"
               disabled={isCouponApplied}

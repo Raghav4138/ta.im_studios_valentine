@@ -1199,14 +1199,14 @@ body {
 
 /* Coupon error message */
 .coupon-message.error {
-  color: #fff;
+  color: #e74c3c;
   font-size: 13px;
   margin-top: 8px;
 }
 
 /* Coupon success message */
 .coupon-message.success {
-  color: #fff;
+  color: #27ae60;
   font-size: 13px;
   margin-top: 8px;
 }
@@ -1335,9 +1335,8 @@ body {
 }
 
 .coupon-message.error {
-  color: #fff;
-  /* background: #FF01A6; */
-  padding: 6px 10px;
+  color: #e74c3c;
+  padding: 2px 0;
   border-radius: 4px;
 }
 

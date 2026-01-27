@@ -47,8 +47,8 @@ export default function OrderSummary({
       : '';
 
     const discountInfo =
-      orderType === 'bouquets' && couponDiscount > 0
-        ? `\nCoupon (BLOOM10): -₹${couponDiscount}`
+      couponDiscount > 0
+        ? `\nCoupon (${formData.couponCode}): -₹${couponDiscount}`
         : '';
 
     const totalLine = `Subtotal: ₹${totalPrice}${discountInfo}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
@@ -174,7 +174,7 @@ Please confirm.`;
             </div>
             {couponDiscount > 0 && (
               <div className="price-detail">
-                <span>Coupon (BLOOM10) - 10%:</span>
+                <span>Coupon ({formData.couponCode}):</span>
                 <span>-₹{couponDiscount}</span>
               </div>
             )}
