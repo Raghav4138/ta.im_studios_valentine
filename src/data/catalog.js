@@ -8,7 +8,7 @@ export const VALENTINE_DAYS = [
       { id: "r1", name: "Crochet Rose Keychain", price: 99, image: "/products/crochet-rose-keychain-99.jpeg" },
       { id: "r2", name: "Single Crochet Rose with Card", price: 179, image: "/products/rose_single_crochet2.jpeg" },
       { id: "r3", name: "Single Crochet Tulip", price: 179, image: "/products/tulip_single_crochet_299.png" },
-      { id: "r4", name: "Large Size Crochet Bouquet", price: 299, image: "/products/large-crochet-flower-299.jpeg" },
+      { id: "r4", name: "Large Size Crochet Flower", price: 299, image: "/products/large-crochet-flower-299.jpeg" },
       // { id: "r5", name: "Luxury Satin Rose Bouquet (8 Roses)", price: 799, image: "/products/rose_satin_bouquet_8_799.jpeg" },
     ],
   },
@@ -169,3 +169,11 @@ export const SURPRISE_FREEBIE = {
   price: 0,
   isFreebie: true,
 };
+
+export const ADDONS = [
+  { id: 'polaroid_photo_strip', name: 'Polaroid Photo Strip', price: 19, image: 'https://m.media-amazon.com/images/I/71FSgdS0lgL._AC_UF894,1000_QL80_.jpg' },
+  { id: 'scrunchie', name: 'Scrunchie', price: 29, image: 'products/addons/scrunchie.png' },
+  { id: 'claw_clip', name: 'Claw Clip', price: 35, image: 'products/addons/claw.png' },
+  { id: 'furry_clutch', name: 'Furry Clutch', price: 39, image: 'products/addons/furry-clutch.jpg' },
+  { id: 'candle', name: 'Scented Candle', price: 149, image: 'https://cdn.faire.com/fastly/df171b81a92595e80a4c1fbdada3932f3b2cd266dea63fa16257fc765912aa70.jpeg?bg-color=FFFFFF&dpr=1&fit=crop&format=jpg&height=720&precrop=1366,1366,x0,y366,safe&width=720' },
+];

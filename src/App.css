@@ -2054,3 +2054,172 @@ button {
     border-radius: 20px;
   }
 }
+
+/* ========================
+   ADD-ONS SCREEN
+   ======================== */
+.addons-screen {
+  padding-bottom: 100px;
+}
+
+.addons-content {
+  padding: 0 16px;
+}
+
+.addons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.addon-card {
+  background: white;
+  border: 1.5px solid #E7D3DE;
+  border-radius: 20px;
+  padding: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.addon-card.selected {
+  border-color: #FF01A6;
+  box-shadow: 0 4px 12px rgba(255, 1, 166, 0.15);
+}
+
+.addon-card .product-image {
+  width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9f3f6;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 100px;
+}
+
+.addon-card .product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.addon-card h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111;
+  margin: 4px 0;
+  line-height: 1.2;
+}
+
+.addon-card .product-price {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  color: #C42461;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.addon-card .qty-control {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid #F3A3C8;
+  border-radius: 999px;
+  padding: 4px 6px;
+  margin-top: auto;
+}
+
+.addon-card .qty-btn {
+  width: 40px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1.5px solid #F3A3C8;
+  background: #fff;
+  color: #333;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.addon-card .qty-btn:hover:not(:disabled) {
+  background: #fff5fb;
+  border-color: #FF01A6;
+}
+
+.addon-card .qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.addon-card .qty-value {
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  text-align: center;
+}
+
+.addons-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 560px;
+  background: #fff;
+  padding: 10px 14px;
+  border: 1.5px solid #F3A3C8;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(243, 163, 200, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  z-index: 50;
+}
+
+.skip-btn {
+  background: #f5f5f5 !important;
+  color: #666 !important;
+  border-color: #ddd !important;
+}
+
+.skip-btn:hover {
+  background: #eee !important;
+}
+
+/* Add-on items in Order Summary */
+.summary-item.addon-item {
+  color: #92337A;
+}
+
+.summary-item.addon-item span:first-child {
+  font-weight: 500;
+}
+
+@media (max-width: 360px) {
+  .addons-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .addon-card .qty-control {
+    grid-template-columns: 36px 1fr 36px;
+  }
+  
+  .addon-card .qty-btn {
+    width: 36px;
+    height: 28px;
+  }
+}

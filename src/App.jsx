@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import './App.css';
-import { VALENTINE_DAYS, BOUQUETS, READYMADE_HAMPERS } from './data/catalog';
+import { VALENTINE_DAYS, BOUQUETS, READYMADE_HAMPERS, ADDONS } from './data/catalog';
 import { calculateDeliveryCharge, DELIVERY_CHARGES } from './utils/deliveryCharge';
 import LandingScreen from './components/LandingScreen';
 import QuestionScreen from './components/QuestionScreen';
@@ -11,6 +11,7 @@ import OrderSummary from './components/OrderSummary';
 import Navbar from './components/Navbar';
 import HamperCard from './components/HamperCard';
 import HamperDetails from './components/HamperDetails';
+import AddonsScreen from './components/AddonsScreen';
 
 const STEPS = {
   LANDING: 'landing',
@@ -21,6 +22,7 @@ const STEPS = {
   BOUQUETS: 'bouquets',
   READYMADE_HAMPERS: 'readymade_hampers',
   HAMPER_DETAILS: 'hamper_details',
+  ADDONS: 'addons',
   CHECKOUT: 'checkout',
   ORDER_SUMMARY: 'order_summary',
 };
@@ -42,6 +44,7 @@ function App() {
   const [orderFlow, setOrderFlow] = useState('hamper');
   const [checkoutData, setCheckoutData] = useState(null);
   const [freebieItem, setFreebieItem] = useState(null);
+  const [addons, setAddons] = useState({});
   
   // Form data state to persist across navigation
   const [savedFormData, setSavedFormData] = useState(null);
@@ -102,7 +105,27 @@ function App() {
   };
 
   const handleProceedFromHamperDetails = () => {
+    setStep(STEPS.ADDONS);
+  };
+
+  // Addons screen handlers
+  const handleAddonsSkip = () => {
     setStep(STEPS.CHECKOUT);
+  };
+
+  const handleAddonsContinue = () => {
+    setStep(STEPS.CHECKOUT);
+  };
+
+  const handleBackFromAddons = () => {
+    if (orderFlow === 'bouquets') {
+      setStep(STEPS.BOUQUETS);
+    } else if (orderFlow === 'readymade-hampers') {
+      setStep(STEPS.HAMPER_DETAILS);
+    } else {
+      setCurrentDayIndex(VALENTINE_DAYS.length - 1);
+      setStep(STEPS.DAY_BUILDER);
+    }
   };
 
   const handleSelectProduct = (product) => {
@@ -159,7 +182,7 @@ function App() {
     if (currentDayIndex < VALENTINE_DAYS.length - 1) {
       setCurrentDayIndex((prev) => prev + 1);
     } else {
-      setStep(STEPS.CHECKOUT);
+      setStep(STEPS.ADDONS);
     }
   };
 
@@ -189,16 +212,7 @@ function App() {
   };
 
   const handleBackFromCheckout = () => {
-    if (orderFlow === 'bouquets') {
-      setStep(STEPS.BOUQUETS);
-      return;
-    }
-    if (orderFlow === 'readymade-hampers') {
-      setStep(STEPS.HAMPER_DETAILS);
-      return;
-    }
-    setCurrentDayIndex(VALENTINE_DAYS.length - 1);
-    setStep(STEPS.DAY_BUILDER);
+    setStep(STEPS.ADDONS);
   };
 
   const handleEditCheckout = () => setStep(STEPS.CHECKOUT);
@@ -215,7 +229,14 @@ function App() {
 
   const sortedBouquets = [...BOUQUETS].sort((a, b) => (a.height || 0) - (b.height || 0));
 
-  const totalPrice = allSelectedItems.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
+  // Calculate addons total
+  const addonsTotal = ADDONS.reduce((sum, addon) => {
+    const qty = addons[addon.id] || 0;
+    return sum + addon.price * qty;
+  }, 0);
+
+  const itemsTotal = allSelectedItems.reduce((sum, item) => sum + item.price * (item.qty || 1), 0);
+  const totalPrice = itemsTotal + addonsTotal;
 
   // Use delivery charge from checkout data if available, otherwise use current tracked charge
   const deliveryCharge = checkoutData?.deliveryCharge ?? currentDeliveryCharge;
@@ -283,7 +304,7 @@ function App() {
         onSelectProduct={handleBouquetSelect}
         onRemoveItem={handleBouquetRemove}
         totalPrice={totalPrice}
-        onNext={() => setStep(STEPS.CHECKOUT)}
+        onNext={() => setStep(STEPS.ADDONS)}
         onBack={() => setStep(STEPS.LANDING)}
         isLastDay
       />
@@ -330,6 +351,18 @@ function App() {
     );
   }
 
+  if (step === STEPS.ADDONS) {
+    content = (
+      <AddonsScreen
+        addons={addons}
+        setAddons={setAddons}
+        onSkip={handleAddonsSkip}
+        onContinue={handleAddonsContinue}
+        onBack={handleBackFromAddons}
+      />
+    );
+  }
+
   if (step === STEPS.CHECKOUT) {
     content = (
       <CheckoutForm
@@ -357,6 +390,7 @@ function App() {
         deliveryCharge={deliveryCharge}
         formData={checkoutData}
         freebieItem={freebieItem}
+        addons={addons}
         onEdit={handleEditCheckout}
         onBack={handleBackFromOrderSummary}
       />

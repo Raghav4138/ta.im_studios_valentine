@@ -1,5 +1,5 @@
 import React from 'react';
-import { VALENTINE_DAYS } from '../data/catalog';
+import { VALENTINE_DAYS, ADDONS } from '../data/catalog';
 
 const WHATSAPP_NUMBER = '+91 9569941138';
 
@@ -13,13 +13,25 @@ export default function OrderSummary({
   deliveryCharge,
   formData,
   freebieItem,
+  addons = {},
   onEdit,
   onBack,
 }) {
   const couponDiscount = formData?.couponDiscount || 0;
   const finalTotal = totalPrice - couponDiscount + deliveryCharge;
 
+  // Get selected addons with quantities
+  const selectedAddons = ADDONS.filter((addon) => addons[addon.id] > 0).map((addon) => ({
+    ...addon,
+    qty: addons[addon.id],
+  }));
+
   const generateWhatsAppMessage = () => {
+    // Build addons section for WhatsApp message
+    const addonsSection = selectedAddons.length > 0
+      ? `\n\nAdd-ons:\n${selectedAddons.map((addon) => `• ${addon.name} × ${addon.qty} — ₹${addon.price * addon.qty}`).join('\n')}`
+      : '';
+
     // Special handling for readymade hampers
     if (orderType === 'readymade-hampers' && selectedItems.length > 0) {
       const hamper = selectedItems[0];
@@ -39,7 +51,7 @@ export default function OrderSummary({
       const message = `Hello, I want to order a Readymade Hamper from Taim Studios.
 
 Selected Hamper:
-${itemsList}
+${itemsList}${addonsSection}
 
 Name: ${formData.name}
 Phone: ${formData.phone}
@@ -107,7 +119,7 @@ Vibe: ${answers.vibe}
 
     const message = `${headerLine}${preferences}
 Selected Items:
-${itemsList}
+${itemsList}${addonsSection}
 
 Name: ${formData.name}
 Phone: ${formData.phone}
@@ -185,7 +197,7 @@ Please confirm.`;
           </div>
         ) : (
           <div className="summary-section">
-            <h3>Selected Items ({selectedItems.length + (freebieItem ? 1 : 0)})</h3>
+            <h3>Selected Items ({selectedItems.length + selectedAddons.length + (freebieItem ? 1 : 0)})</h3>
             <div className="summary-box items-box">
               {selectedItems.map((item) => (
                 <div key={item.id} className="summary-item">
@@ -199,6 +211,12 @@ Please confirm.`;
                   </span>
                 </div>
               ))}
+              {selectedAddons.map((addon) => (
+                <div key={addon.id} className="summary-item addon-item">
+                  <span>{addon.name} × {addon.qty}</span>
+                  <span className="price">₹{addon.price * addon.qty}</span>
+                </div>
+              ))}
               {freebieItem && (
                 <div key={freebieItem.id} className="summary-item freebie-item freebie-enter">
                   <span className="freebie-name">
@@ -208,6 +226,21 @@ Please confirm.`;
                   <span className="price freebie-price">₹{freebieItem.price}</span>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Add-ons for readymade hampers flow */}
+        {orderType === 'readymade-hampers' && selectedAddons.length > 0 && (
+          <div className="summary-section">
+            <h3>Add-ons ({selectedAddons.length})</h3>
+            <div className="summary-box items-box">
+              {selectedAddons.map((addon) => (
+                <div key={addon.id} className="summary-item addon-item">
+                  <span>{addon.name} × {addon.qty}</span>
+                  <span className="price">₹{addon.price * addon.qty}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
