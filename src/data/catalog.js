@@ -8,7 +8,7 @@ export const VALENTINE_DAYS = [
       { id: "r1", name: "Crochet Rose Keychain", price: 99, image: "/products/crochet-rose-keychain-99.jpeg" },
       { id: "r2", name: "Single Crochet Rose with Card", price: 179, image: "/products/rose_single_crochet2.jpeg" },
       { id: "r3", name: "Single Crochet Tulip", price: 179, image: "/products/tulip_single_crochet_299.png" },
-      // { id: "r4", name: "Handmade Crochet Rose Trio Bouquet", price: 499, image: "/products/rose_crochet_trio_499.jpeg" },
+      { id: "r4", name: "Large Size Crochet Bouquet", price: 299, image: "/products/large-crochet-flower-299.jpeg" },
       // { id: "r5", name: "Luxury Satin Rose Bouquet (8 Roses)", price: 799, image: "/products/rose_satin_bouquet_8_799.jpeg" },
     ],
   },
