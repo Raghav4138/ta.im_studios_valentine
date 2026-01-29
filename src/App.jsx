@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 import { VALENTINE_DAYS, BOUQUETS, READYMADE_HAMPERS, ADDONS } from './data/catalog';
@@ -27,28 +27,101 @@ const STEPS = {
   ORDER_SUMMARY: 'order_summary',
 };
 
-function App() {
-  const [step, setStep] = useState(STEPS.LANDING);
-  const [answers, setAnswers] = useState({ gender: '', age: '', vibe: '' });
+const STORAGE_KEY = 'taimValentineState';
 
-  const [selectedItemsByDay, setSelectedItemsByDay] = useState(
-    VALENTINE_DAYS.reduce((acc, day) => {
+const getInitialState = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (error) {
+    return null;
+  }
+};
+
+function App() {
+  const initialState = useMemo(() => getInitialState(), []);
+  const defaultSelectedItemsByDay = useMemo(() => {
+    return VALENTINE_DAYS.reduce((acc, day) => {
       acc[day.id] = [];
       return acc;
-    }, {})
-  );
+    }, {});
+  }, []);
 
-  const [currentDayIndex, setCurrentDayIndex] = useState(0);
-  const [bouquetSelection, setBouquetSelection] = useState([]);
-  const [selectedReadymadeHamper, setSelectedReadymadeHamper] = useState(null);
-  const [orderFlow, setOrderFlow] = useState('hamper');
-  const [checkoutData, setCheckoutData] = useState(null);
-  const [freebieItem, setFreebieItem] = useState(null);
-  const [addons, setAddons] = useState({});
+  const mergedSelectedItemsByDay = useMemo(() => {
+    if (!initialState?.selectedItemsByDay) return defaultSelectedItemsByDay;
+    const next = { ...defaultSelectedItemsByDay };
+    Object.keys(next).forEach((dayId) => {
+      if (Array.isArray(initialState.selectedItemsByDay[dayId])) {
+        next[dayId] = initialState.selectedItemsByDay[dayId];
+      }
+    });
+    return next;
+  }, [defaultSelectedItemsByDay, initialState?.selectedItemsByDay]);
+
+  const safeStep = useMemo(() => {
+    const validSteps = Object.values(STEPS);
+    return validSteps.includes(initialState?.step) ? initialState.step : STEPS.LANDING;
+  }, [initialState?.step]);
+
+  const [step, setStep] = useState(safeStep);
+  const [answers, setAnswers] = useState(initialState?.answers || { gender: '', age: '', vibe: '' });
+
+  const [selectedItemsByDay, setSelectedItemsByDay] = useState(mergedSelectedItemsByDay);
+
+  const [currentDayIndex, setCurrentDayIndex] = useState(() => {
+    const index = initialState?.currentDayIndex ?? 0;
+    if (typeof index !== 'number') return 0;
+    return Math.min(Math.max(index, 0), VALENTINE_DAYS.length - 1);
+  });
+  const [bouquetSelection, setBouquetSelection] = useState(initialState?.bouquetSelection || []);
+  const [selectedReadymadeHamper, setSelectedReadymadeHamper] = useState(
+    initialState?.selectedReadymadeHamper || null
+  );
+  const [orderFlow, setOrderFlow] = useState(initialState?.orderFlow || 'hamper');
+  const [checkoutData, setCheckoutData] = useState(initialState?.checkoutData || null);
+  const [freebieItem, setFreebieItem] = useState(initialState?.freebieItem || null);
+  const [addons, setAddons] = useState(initialState?.addons || {});
   
   // Form data state to persist across navigation
-  const [savedFormData, setSavedFormData] = useState(null);
-  const [currentDeliveryCharge, setCurrentDeliveryCharge] = useState(0);
+  const [savedFormData, setSavedFormData] = useState(initialState?.savedFormData || null);
+  const [currentDeliveryCharge, setCurrentDeliveryCharge] = useState(
+    initialState?.currentDeliveryCharge || 0
+  );
+
+  useEffect(() => {
+    const stateToPersist = {
+      step,
+      answers,
+      selectedItemsByDay,
+      currentDayIndex,
+      bouquetSelection,
+      selectedReadymadeHamper,
+      orderFlow,
+      checkoutData,
+      freebieItem,
+      addons,
+      savedFormData,
+      currentDeliveryCharge,
+    };
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToPersist));
+    } catch (error) {
+      // Ignore write errors (e.g., storage full or blocked)
+    }
+  }, [
+    step,
+    answers,
+    selectedItemsByDay,
+    currentDayIndex,
+    bouquetSelection,
+    selectedReadymadeHamper,
+    orderFlow,
+    checkoutData,
+    freebieItem,
+    addons,
+    savedFormData,
+    currentDeliveryCharge,
+  ]);
 
   const handleFreebieAdd = (freebie) => setFreebieItem(freebie);
   const handleFreebieRemove = () => setFreebieItem(null);
