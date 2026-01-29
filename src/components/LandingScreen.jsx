@@ -7,8 +7,6 @@ const CAROUSEL_IMAGES = [
 ];
 
 const CAROUSEL_INTERVAL = 3000; // 3 seconds
-const SLIDE_WIDTH = 400;
-const SLIDE_HEIGHT = 300;
 const SLIDE_GAP = 16;
 
 const TESTIMONIALS = [
@@ -25,6 +23,7 @@ const TESTIMONIAL_GAP = 16;
 export default function LandingScreen({ onStartHamper, onStartBouquets, onStartReadymadeHampers }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [slideWidth, setSlideWidth] = useState(Math.min(window.innerWidth - 32, 400));
   const timeoutRef = useRef(null);
   const trackRef = useRef(null);
 
@@ -34,6 +33,15 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
 
   const slides = [...CAROUSEL_IMAGES, ...CAROUSEL_IMAGES];
   const testimonials = [...TESTIMONIALS, ...TESTIMONIALS];
+
+  // Handle responsive slide width
+  useEffect(() => {
+    const handleResize = () => {
+      setSlideWidth(Math.min(window.innerWidth - 32, 400));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Auto-scroll carousel
   useEffect(() => {
@@ -116,7 +124,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
             ref={trackRef}
             className="carousel-track"
             style={{
-              transform: `translateX(-${currentSlide * (SLIDE_WIDTH + SLIDE_GAP)}px)`,
+              transform: `translateX(-${currentSlide * (slideWidth + SLIDE_GAP)}px)`,
               gap: `${SLIDE_GAP}px`,
               transition: isTransitioning ? 'transform 0.5s ease-in-out' : 'none',
             }}
@@ -126,7 +134,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
               <div
                 key={idx}
                 className="carousel-slide"
-                style={{ width: `${SLIDE_WIDTH}px`, height: `${SLIDE_HEIGHT}px` }}
+                style={{ width: `${slideWidth}px`, height: `${slideWidth * 0.75}px` }}
               >
                 <img src={img} alt={`Slide ${idx + 1}`} />
               </div>
@@ -163,7 +171,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
       {/* 5. Complete Solution Section */}
       <section className="landing-solution-section">
         <img src="landing_page/heart-icon2.svg" alt="" className="solution-heart" />
-        <h2 className="solution-heading">A Complete Solution</h2>
+        <h2 className="solution-heading">A COMPLETE SOLUTION</h2>
         <img
           src="landing_page/complete-solution.png"
           alt="Valentine's Week - Rose Day to Valentine's Day"
@@ -173,7 +181,10 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
 
       {/* 6. Discount Section */}
       <section className="landing-discount-section">
-        <h2 className="discount-heading">Get Amazing Discounts!</h2>
+        <h2 className="discount-heading">
+          GET AMAZING <br />
+          DISCOUNTS!
+        </h2>
         <div className="discount-card">
           <img
             src="landing_page/coupon.png"
@@ -204,6 +215,15 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
             ))}
           </div>
         </div>
+      </section>
+
+      {/* CTA2 Section */}
+      <section className="landing-cta2-section">
+        <p className="cta2-subheading">OFFER AVAILABLE FOR LIMITED TIME</p>
+        <h2 className="cta2-heading">BOOK NOW!!</h2>
+        <button className="cta2-button" onClick={onStartHamper}>
+          Build your Hamper Now →
+        </button>
       </section>
 
       {/* 8. Connect With Us */}

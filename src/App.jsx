@@ -155,7 +155,8 @@ function App() {
 
   const handleStartBuilder = () => {
     setOrderFlow('hamper');
-    setStep(STEPS.GENDER);
+    setCurrentDayIndex(0);
+    setStep(STEPS.DAY_BUILDER);
   };
 
   const handleStartBouquets = () => {
@@ -263,7 +264,7 @@ function App() {
     if (currentDayIndex > 0) {
       setCurrentDayIndex((prev) => prev - 1);
     } else {
-      setStep(STEPS.AGE);
+      setStep(STEPS.LANDING);
     }
   };
 
@@ -326,29 +327,29 @@ function App() {
     );
   }
 
-  if (step === STEPS.GENDER) {
-    content = (
-      <QuestionScreen
-        question="Who is this for?"
-        subtitle="Select the best for your loved one"
-        options={genderOptions}
-        onSelect={handleGenderSelect}
-        onBack={() => setStep(STEPS.LANDING)}
-      />
-    );
-  }
+  // if (step === STEPS.GENDER) {
+  //   content = (
+  //     <QuestionScreen
+  //       question="Who is this for?"
+  //       subtitle="Select the best for your loved one"
+  //       options={genderOptions}
+  //       onSelect={handleGenderSelect}
+  //       onBack={() => setStep(STEPS.LANDING)}
+  //     />
+  //   );
+  // }
 
-  if (step === STEPS.AGE) {
-    content = (
-      <QuestionScreen
-        question="Select their Age"
-        subtitle="although age is just a number"
-        options={ageOptions}
-        onSelect={handleAgeSelect}
-        onBack={() => setStep(STEPS.GENDER)}
-      />
-    );
-  }
+  // if (step === STEPS.AGE) {
+  //   content = (
+  //     <QuestionScreen
+  //       question="Select their Age"
+  //       subtitle="although age is just a number"
+  //       options={ageOptions}
+  //       onSelect={handleAgeSelect}
+  //       onBack={() => setStep(STEPS.GENDER)}
+  //     />
+  //   );
+  // }
 
   if (step === STEPS.DAY_BUILDER) {
     const currentDay = VALENTINE_DAYS[currentDayIndex];
@@ -473,7 +474,7 @@ function App() {
   return (
     <>
       <div className="app-wrapper">
-        <Navbar variant={step === STEPS.LANDING ? 'landing' : 'default'} />
+        <Navbar variant="landing" />
         {content}
       </div>
       <Analytics />
