@@ -11,13 +11,29 @@ const SLIDE_WIDTH = 400;
 const SLIDE_HEIGHT = 300;
 const SLIDE_GAP = 16;
 
+const TESTIMONIALS = [
+  "Absolutely loved the gift hamper! It made my day and was a perfect surprise. I would highly recommend these hampers to anyone looking for a beautiful and thoughtful gift.",
+  "The products are amazing and the creativity you guys have is awesome. Everything was finely detailed and super cute. The whole experience was extremely fun. Wishing you great success!",
+  "I am so happy with your collection. Wonderful experience and very satisfying. Thank you so much!",
+  "It was really very good! I loved your collection. ❤️",
+  "Thank you so much for making such a special memory for us. We collected great memories. Great work!"
+];
+
+const TESTIMONIAL_CARD_WIDTH = 344;
+const TESTIMONIAL_GAP = 16;
+
 export default function LandingScreen({ onStartHamper, onStartBouquets, onStartReadymadeHampers }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const timeoutRef = useRef(null);
   const trackRef = useRef(null);
 
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isTestimonialTransitioning, setIsTestimonialTransitioning] = useState(true);
+  const testimonialTimeoutRef = useRef(null);
+
   const slides = [...CAROUSEL_IMAGES, ...CAROUSEL_IMAGES];
+  const testimonials = [...TESTIMONIALS, ...TESTIMONIALS];
 
   // Auto-scroll carousel
   useEffect(() => {
@@ -30,6 +46,21 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
     return () => {
       if (timeoutRef.current) {
         clearInterval(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Auto-scroll testimonials
+  useEffect(() => {
+    const nextTestimonial = () => {
+      setCurrentTestimonial((prev) => prev + 1);
+    };
+
+    testimonialTimeoutRef.current = setInterval(nextTestimonial, CAROUSEL_INTERVAL);
+
+    return () => {
+      if (testimonialTimeoutRef.current) {
+        clearInterval(testimonialTimeoutRef.current);
       }
     };
   }, []);
@@ -52,6 +83,17 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
       // Re-enable transition on next tick
       requestAnimationFrame(() => {
         requestAnimationFrame(() => setIsTransitioning(true));
+      });
+    }
+  };
+
+  const handleTestimonialTransitionEnd = () => {
+    if (currentTestimonial >= TESTIMONIALS.length) {
+      setIsTestimonialTransitioning(false);
+      setCurrentTestimonial(0);
+      // Re-enable transition on next tick
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsTestimonialTransitioning(true));
       });
     }
   };
@@ -120,7 +162,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
 
       {/* 5. Complete Solution Section */}
       <section className="landing-solution-section">
-        <img src="landing_page/heart-icon.png" alt="" className="solution-heart" />
+        <img src="landing_page/heart-icon2.svg" alt="" className="solution-heart" />
         <h2 className="solution-heading">A Complete Solution</h2>
         <img
           src="landing_page/complete-solution.png"
@@ -141,15 +183,28 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
         </div>
       </section>
 
-      {/* 7. Testimonials - Placeholder for later */}
-      {/* <section className="landing-testimonials-section">
-        <h2 className="testimonials-heading">Testimonials</h2>
-        <div className="testimonials-placeholder">
-          <div className="testimonial-card placeholder"></div>
-          <div className="testimonial-card placeholder"></div>
-          <div className="testimonial-card placeholder"></div>
+      {/* 7. Testimonials Section */}
+      <section className="landing-testimonials-section">
+        <p className="testimonials-subheading">TRUSTED BY 100+ HAPPY CUSTOMERS</p>
+        <h2 className="testimonials-heading">TESTIMONIALS</h2>
+        <div className="testimonials-carousel">
+          <div
+            className="testimonials-track"
+            style={{
+              transform: `translateX(-${currentTestimonial * (TESTIMONIAL_CARD_WIDTH + TESTIMONIAL_GAP)}px)`,
+              transition: isTestimonialTransitioning ? 'transform 0.5s ease-in-out' : 'none',
+            }}
+            onTransitionEnd={handleTestimonialTransitionEnd}
+          >
+            {testimonials.map((text, idx) => (
+              <div key={idx} className="testimonial-card">
+                <img src="landing_page/heart-icon.svg" alt="" className="testimonial-heart" />
+                <p className="testimonial-text">{text}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </section> */}
+      </section>
 
       {/* 8. Connect With Us */}
       <section className="landing-connect-section">

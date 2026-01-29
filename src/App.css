@@ -2257,29 +2257,36 @@ button {
 
 .carousel-container {
   width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  /* padding: 0 16px; */
   overflow: hidden;
 }
 
 .carousel-track {
   display: flex;
-  will-change: transform;
+  gap: 16px;
+  transition: transform 0.5s ease-in-out;
+  padding: 0 16px;
+  margin: 0 auto;
 }
 
 .carousel-slide {
   flex-shrink: 0;
+  width: calc(100vw - 32px);
+  max-width: 400px;
+  aspect-ratio: 400/300;
   border-radius: 20px;
   overflow: hidden;
   background: #fff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  margin: 0 auto;
 }
 
 .carousel-slide img {
   width: 100%;
   height: 100%;
+  border-radius: 20px;
   object-fit: cover;
   display: block;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .carousel-dots {
@@ -2320,7 +2327,7 @@ button {
   padding: 16px 24px;
   border-radius: 999px;
   font-family: 'MOMCAKE', 'Poppins', sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -2364,6 +2371,7 @@ button {
   width: 32px;
   height: auto;
   margin-bottom: 8px;
+  /* color: #DA0F0E; */
 }
 
 .solution-heading {
@@ -2388,11 +2396,12 @@ button {
 }
 
 .discount-heading {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  font-style: normal;
   color: #111;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .discount-card {
@@ -2408,31 +2417,73 @@ button {
 
 /* Testimonials Section */
 .landing-testimonials-section {
-  padding: 40px 16px;
+  padding: 40px 0;
   text-align: center;
+  overflow: hidden;
+}
+
+.testimonials-subheading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #FF528A;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 .testimonials-heading {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
+  font-family: 'BoostPlayer', 'Playfair Display', serif;
+  font-size: 36px;
+  font-weight: 700;
+  font-style: normal;
   color: #111;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.testimonials-placeholder {
+.testimonials-carousel {
+  width: 100%;
+  overflow: hidden;
+  max-width: 344px;
+  margin: 0 auto;
+}
+
+.testimonials-track {
   display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 8px;
+  gap: 16px;
+  will-change: transform;
 }
 
-.testimonial-card.placeholder {
-  min-width: 120px;
-  height: 160px;
-  background: #f0f0f0;
-  border-radius: 12px;
+.testimonial-card {
+  width: 344px;
+  height: 281px;
   flex-shrink: 0;
+  border-radius: 20px;
+  background: linear-gradient(45deg, #F70050, #FF528A, #FF6999);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  box-sizing: border-box;
+}
+
+.testimonial-heart {
+  width: 32px;
+  height: auto;
+  margin-bottom: 16px;
+  opacity: 0.9;
+  filter: brightness(0) invert(1);
+}
+
+.testimonial-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Connect Section */
@@ -2442,11 +2493,12 @@ button {
 }
 
 .connect-heading {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 700;
+  font-style: normal;
   color: #111;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .connect-buttons {
