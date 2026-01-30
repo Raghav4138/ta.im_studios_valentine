@@ -143,7 +143,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
         </div>
 
         {/* 3. Dots Navigation */}
-        <div className="carousel-dots">
+        {/* <div className="carousel-dots">
           {CAROUSEL_IMAGES.map((_, idx) => (
             <button
               key={idx}
@@ -152,7 +152,7 @@ export default function LandingScreen({ onStartHamper, onStartBouquets, onStartR
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
-        </div>
+        </div> */}
       </section>
 
       {/* 4. Action Buttons */}
