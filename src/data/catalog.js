@@ -167,6 +167,18 @@ export const READYMADE_HAMPERS = [
     ],
   },
   {
+    id: "mvh1",
+    name: "Men Valentine's Hamper",
+    description: "A specially curated Valentine's hamper for him with a mix of accessories and self-care items.",
+    price: 899,
+    image: "/products/readymade_hamper/men_special_readymade_hamper.jpeg",
+    includedItems: [
+      "Leather Mens Wallet",
+      "Kitkat Chocolate",
+      "Roses"
+    ]
+  },
+  {
   id: "vah1",
   name: "Valentine's Acrylic Box Hamper",
   description: "A beautifully curated Valentine's acrylic box hamper with customizable couple photo and premium self-care & accessory items.",
@@ -183,7 +195,7 @@ export const READYMADE_HAMPERS = [
     "Glow Sheet Mask (1)",
     "DIY Accessories (2)"
   ],
-},
+  },
   // Add more hampers here by copying the structure above
 ];
 
