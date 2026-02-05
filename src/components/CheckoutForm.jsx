@@ -12,13 +12,22 @@ export default function CheckoutForm({
   initialFormData = null,
   onDeliveryChargeChange,
 }) {
-  const [formData, setFormData] = useState(initialFormData || {
-    name: '',
-    phone: '',
-    city: '',
-    address: '',
-    pincode: '',
-    giftMessage: '',
+  const [formData, setFormData] = useState(() => {
+    const base = initialFormData || {};
+    const nameParts = base.name ? base.name.trim().split(/\s+/) : [];
+    const firstName = base.firstName || nameParts[0] || '';
+    const lastName = base.lastName || nameParts.slice(1).join(' ') || '';
+
+    return {
+      firstName,
+      lastName,
+      email: base.email || '',
+      phone: base.phone || '',
+      city: base.city || '',
+      address: base.address || '',
+      pincode: base.pincode || '',
+      giftMessage: base.giftMessage || '',
+    };
   });
 
   const [errors, setErrors] = useState({});
@@ -125,7 +134,8 @@ export default function CheckoutForm({
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.phone.trim() || formData.phone.length < 10)
       newErrors.phone = 'Valid phone number required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
@@ -245,16 +255,41 @@ export default function CheckoutForm({
         {/* Form */}
         <form onSubmit={handleSubmit} className="checkout-form">
           <div className="form-group">
-            <label htmlFor="name">Name *</label>
+            <label htmlFor="firstName">First Name *</label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              placeholder="Your name"
+              placeholder="First name"
             />
-            {errors.name && <span className="error">{errors.name}</span>}
+            {errors.firstName && <span className="error">{errors.firstName}</span>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Last name"
+            />
+            {errors.lastName && <span className="error">{errors.lastName}</span>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="email">Email (optional)</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="you@example.com"
+            />
           </div>
 
           <div className="form-group">

@@ -19,6 +19,10 @@ export default function OrderSummary({
 }) {
   const couponDiscount = formData?.couponDiscount || 0;
   const finalTotal = totalPrice - couponDiscount + deliveryCharge;
+  const fullName = [formData?.firstName, formData?.lastName]
+    .filter(Boolean)
+    .join(' ')
+    .trim() || formData?.name || '';
 
   // Get selected addons with quantities
   const selectedAddons = ADDONS.filter((addon) => addons[addon.id] > 0).map((addon) => ({
@@ -47,14 +51,16 @@ export default function OrderSummary({
           : '';
 
       const totalLine = `Subtotal: ₹${totalPrice}${discountInfo}${deliveryCharge > 0 ? `\nDelivery: ₹${deliveryCharge}` : '\nDelivery: Free (Bathinda)'}`;
+      const emailLine = formData.email ? `\nEmail: ${formData.email}` : '';
 
       const message = `Hello, I want to order a Readymade Hamper from Taim Studios.
 
 Selected Hamper:
 ${itemsList}${addonsSection}
 
-Name: ${formData.name}
+    Name: ${fullName}
 Phone: ${formData.phone}
+    ${emailLine}
 City: ${formData.city}
 Address: ${formData.address}
 Pincode: ${formData.pincode}
@@ -116,13 +122,15 @@ For: ${answers.gender}
 Age: ${answers.age}
 Vibe: ${answers.vibe}
 `;
+    const emailLine = formData.email ? `\nEmail: ${formData.email}` : '';
 
     const message = `${headerLine}${preferences}
 Selected Items:
 ${itemsList}${addonsSection}
 
-Name: ${formData.name}
+  Name: ${fullName}
 Phone: ${formData.phone}
+  ${emailLine}
 City: ${formData.city}
 Address: ${formData.address}
 Pincode: ${formData.pincode}
@@ -155,13 +163,14 @@ Please confirm.`;
           <h3>Delivery To</h3>
           <div className="summary-box">
             <p>
-              <strong>{formData.name}</strong>
+              <strong>{fullName}</strong>
             </p>
             <p>{formData.address}</p>
             <p>
               {formData.city} - {formData.pincode}
             </p>
             <p>📱 {formData.phone}</p>
+            {formData.email && <p>✉️ {formData.email}</p>}
           </div>
         </div>
 

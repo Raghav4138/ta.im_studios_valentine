@@ -4,7 +4,9 @@ import "../App.css";
 export default function IsmRosePage() {
   const heroBackground = "/ism-rose/hero-bg.jpg";
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    email: "",
     whatsapp: "",
     quantity: "Classic Bouquet – 4 to 5 roses",
     recipient: "",
@@ -56,7 +58,8 @@ export default function IsmRosePage() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!formData.whatsapp.trim() || formData.whatsapp.length < 10) {
       newErrors.whatsapp = "Valid WhatsApp number required";
     }
@@ -79,8 +82,10 @@ export default function IsmRosePage() {
       "https://docs.google.com/forms/d/e/1FAIpQLSf9SR4RyG9vp2qb_YX6HygJXogvyZfW_k1EL-_zyqVznn4FlQ/formResponse";
 
     const formBody = new URLSearchParams({
-      "entry.990595197": formData.name,
+      "entry.990595197": formData.firstName,
+      "entry.1699669172": formData.lastName,
       "entry.788427751": formData.whatsapp,
+      "entry.1036239347": formData.email,
       "entry.476302456": formData.quantity,
       "entry.2138304947": formData.recipient,
     });
@@ -240,17 +245,44 @@ export default function IsmRosePage() {
 
             <form className="ism-form" onSubmit={handleSubmit}>
               <div className="ism-form-group">
-                <label htmlFor="name" className="ism-label">Full Name</label>
+                <label htmlFor="firstName" className="ism-label">First Name</label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  className={`ism-input ${errors.name ? "ism-input-error" : ""}`}
-                  placeholder="Rahul Kumar"
-                  value={formData.name}
+                  id="firstName"
+                  name="firstName"
+                  className={`ism-input ${errors.firstName ? "ism-input-error" : ""}`}
+                  placeholder="Rahul"
+                  value={formData.firstName}
                   onChange={handleChange}
                 />
-                {errors.name && <span className="ism-error">{errors.name}</span>}
+                {errors.firstName && <span className="ism-error">{errors.firstName}</span>}
+              </div>
+
+              <div className="ism-form-group">
+                <label htmlFor="lastName" className="ism-label">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  className={`ism-input ${errors.lastName ? "ism-input-error" : ""}`}
+                  placeholder="Kumar"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+                {errors.lastName && <span className="ism-error">{errors.lastName}</span>}
+              </div>
+
+              <div className="ism-form-group">
+                <label htmlFor="email" className="ism-label">Email (optional)</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="ism-input"
+                  placeholder="rahul@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="ism-form-group">
@@ -317,7 +349,10 @@ export default function IsmRosePage() {
               <button type="submit" className="ism-submit-btn">
                 SECURE MY ROSES
               </button>
-              <p className="ism-form-disclaimer">Limited quantity available.</p>
+              <p className="ism-form-disclaimer">Limited quantity available.
+                <br></br>
+                Important updates (pickup point & timing) will be shared only on WhatsApp.
+              </p>
             </form>
           </div>
         ) : (
