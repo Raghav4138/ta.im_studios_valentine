@@ -21,7 +21,7 @@ export default function IsmRosePage() {
   });
 
   useEffect(() => {
-    const targetTime = new Date("2026-02-06T15:00:00").getTime();
+    const targetTime = new Date("2026-02-06T18:00:00").getTime();
 
     const updateTimer = () => {
       const now = new Date().getTime();
