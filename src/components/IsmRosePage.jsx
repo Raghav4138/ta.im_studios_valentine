@@ -82,8 +82,10 @@ const COMBO_PRODUCT = {
 const ALL_PRODUCTS = [...ISM_ROSE_PRODUCTS, COMBO_PRODUCT];
 
 export default function IsmRosePage() {
+  const ordersDisabled = true;
   const [cart, setCart] = useState({}); // { productId: quantity }
   const [screen, setScreen] = useState("products"); // 'products' | 'summary'
+  const [toastMessage, setToastMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -115,6 +117,14 @@ export default function IsmRosePage() {
     document.getElementById("products-section")?.scrollIntoView({
       behavior: "smooth",
     });
+  };
+
+  const showToast = (message) => {
+    setToastMessage(message);
+    window.clearTimeout(showToast._timeoutId);
+    showToast._timeoutId = window.setTimeout(() => {
+      setToastMessage("");
+    }, 2400);
   };
 
   const handleSelect = (productId) => {
@@ -236,8 +246,13 @@ export default function IsmRosePage() {
                 <br />
                 Collect it inside campus on Rose Day.
               </p>
-              <button className="ism-hero-cta" onClick={scrollToProducts}>
-                PLACE ORDERS NOW <span className="ism-cta-arrow">↓</span>
+              <button
+                className={`ism-hero-cta ${ordersDisabled ? "ism-hero-cta--disabled" : ""}`}
+                onClick={ordersDisabled ? () => showToast("Orders are currently closed") : scrollToProducts}
+                aria-disabled={ordersDisabled}
+              >
+                {ordersDisabled ? "ORDERS CLOSED" : "PLACE ORDERS NOW"}
+                <span className="ism-cta-arrow">↓</span>
               </button>
             </div>
           </section>
@@ -286,7 +301,7 @@ export default function IsmRosePage() {
                 return (
                   <div
                     key={product.id}
-                    className={`ism-product-card ${isSelected ? "ism-product-selected" : ""}`}
+                    className={`ism-product-card ${isSelected ? "ism-product-selected" : ""} ${ordersDisabled ? "ism-product-disabled" : ""}`}
                   >
                     <div className="ism-product-image-wrapper">
                       <img
@@ -298,6 +313,9 @@ export default function IsmRosePage() {
                         //   e.target.src = "/ism-rose/placeholder.jpg";
                         // }}
                       />
+                      {ordersDisabled && (
+                        <div className="ism-out-of-stock">OUT OF STOCK</div>
+                      )}
                     </div>
                     <div className="ism-product-info">
                       <div className="ism-product-name-row">
@@ -332,6 +350,7 @@ export default function IsmRosePage() {
                           <button
                             className="ism-select-btn"
                             onClick={() => handleSelect(product.id)}
+                            disabled={ordersDisabled}
                           >
                             Select
                           </button>
@@ -340,6 +359,7 @@ export default function IsmRosePage() {
                             <button
                               className="ism-qty-btn"
                               onClick={() => handleDecrement(product.id)}
+                              disabled={ordersDisabled}
                             >
                               −
                             </button>
@@ -347,6 +367,7 @@ export default function IsmRosePage() {
                             <button
                               className="ism-qty-btn"
                               onClick={() => handleIncrement(product.id)}
+                              disabled={ordersDisabled}
                             >
                               +
                             </button>
@@ -371,6 +392,7 @@ export default function IsmRosePage() {
                 <button
                   className="ism-continue-btn"
                   onClick={() => setScreen("summary")}
+                  disabled={ordersDisabled}
                 >
                   Continue →
                 </button>
@@ -423,7 +445,11 @@ export default function IsmRosePage() {
               <p className="ism-pickup-subtext">Delivery updates will be shared in the WhatsApp group.</p>
             </div>
 
-            <button className="ism-whatsapp-btn" onClick={handleWhatsAppOrder}>
+            <button
+              className="ism-whatsapp-btn"
+              onClick={handleWhatsAppOrder}
+              disabled={ordersDisabled}
+            >
               <svg
                 className="ism-whatsapp-icon"
                 viewBox="0 0 24 24"
@@ -445,6 +471,10 @@ export default function IsmRosePage() {
           <span className="ism-footer-text">IIT ISM</span>
         </div>
       </footer>
+
+      <div className={`ism-toast ${toastMessage ? "is-visible" : ""}`}>
+        {toastMessage}
+      </div>
     </div>
   );
 }
